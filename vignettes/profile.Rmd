@@ -1,0 +1,25 @@
+---
+title: "Get User Profile Info"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Get User Profile Info}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(parleR)
+```
+
+```{r}
+1+1
+```
+
+# HIER DANN MEHR WAS AKTUELL IM README IST...

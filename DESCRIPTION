@@ -1,0 +1,32 @@
+Package: parleR
+Title: R Interface/Wrapper This is in Title Case
+Version: 0.0.0.9000
+Authors@R: 
+    c(person(given = "Marcel",
+           family = "Schliebs",
+           role = c( "cre","aut"),
+           email = "marcel.schliebs@oii.ox.ac.uk",
+           comment = c(ORCID = "YOUR-ORCID-ID")),
+    person(given = "Dorian",
+           family = "Quelle",
+           email = "d.quelle@zeppelin-university.net",
+           role = c("aut")))
+Description: This is an R Interface relying on the 'parlance' client published by 'castlelemongrab' on github. Full credits for the backend go to https: //github.com/castlelemongrab/parlance.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    dplyr,
+    purrr,
+    jsonlite,
+    readr,
+    magrittr,
+    stringr,
+    lubridate
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Suggests: 
+    knitr,
+    rmarkdown,
+    tidyverse
+VignetteBuilder: knitr

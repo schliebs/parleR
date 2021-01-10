@@ -1,0 +1,150 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+<!-- badges: start -->
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![CRAN status](https://www.r-pkg.org/badges/version/ggecon)](https://CRAN.R-project.org/package=ggecon)
+<!-- badges: end -->
+
+
+## Pre-Installation Steps and System Requirements
+
+### Installing node.js
+
+### Installing parlance
+
+### Creating a Parler Profile and Obtaining Cookies
+
+Disclaimer: The end user uses this piece of software at their own legal responsibility. The authors do not take any responsibility for how you use the piece of software. We do not encouragement the breach of Terms of Service of any company, except in legally and ethically permitted cases. 
+
+## Installation and Loading
+
+```{r eval = F}
+devtools::install_github("schliebs/parleR")
+```
+
+```{r message = F,warning = F}
+library(parleR)
+```
+
+```{r}
+library(tidyverse)
+```
+
+
+## API Authentication
+
+There are two options to set a CT API token and save it in the system environment. The first one is to trigger an RStudio window opening, and entering the token.
+
+## Get Posts by Username
+
+## Get User Profile Data
+
+### Raw JSON String
+
+NOT WORKING YET, FIX TOMORROW!
+
+```{r,eval = F}
+json_str <- 
+  parler_profile(user = "TuckerCarlson",
+                 output_format = "json",
+                 flatten_sep = " || ",
+                 verbose = FALSE)
+```
+
+
+### R data.frame (nested variables flattened)
+
+```{r}
+out <-
+  parler_profile(user = "caseybmulligan",
+                 output_format = "data.frame",
+                 flatten_sep = " || ",
+                 token_variables = F,
+                 parse_numbers = TRUE,
+                 verbose = TRUE)
+
+```
+
+```{r}
+colnames(out)
+```
+
+```{r}
+out %>% 
+  select(name,username,followers,following,likes,posts,joined,bio)
+```
+### Without Token-associated variables 
+
+```{r}
+out2 <-
+  parler_profile(user = "caseybmulligan",
+                 output_format = "data.frame",
+                 flatten_sep = " || ",
+                 token_variables = TRUE,
+                 parse_numbers = TRUE,
+                 verbose = TRUE)
+```
+
+```{r}
+colnames(out2)
+```
+
+New colnames which are only outputtet if `token_variables == TRUE`:
+
+```{r}
+colnames(out2) %>% .[!. %in% colnames(out)]
+```
+
+### JSON List Object
+
+```{r}
+jlist <- 
+  parler_profile(user = "caseybmulligan",
+                 output_format = "list",
+                 flatten_sep = " || ",
+                 verbose = FALSE)
+```
+
+```{r}
+str(jlist)
+```
+
+
+### Multiple Users
+
+```{r}
+user_vec <- c("Marklevinshow","SeanHannity","Devinnunes","GovernorNoem",
+              "KTHopkins","Westmonster","TommyRobinson")
+
+out_df <- 
+  purrr::map(.x = user_vec,
+           .f = ~ 
+             parler_profile(user = .x,
+                            output_format = "data.frame",
+                            flatten_sep = " || ",
+                            token_variables = FALSE,
+                            parse_numbers = TRUE,
+                            verbose = FALSE)
+           ) %>% 
+  bind_rows()
+
+```
+
+```{r}
+out_df %>% 
+    select(name,username,followers,following,likes,posts,joined,bio)
+```
+
