@@ -1,6 +1,11 @@
 ---
+title: "parleR: An R-Interface to Parler.com (backend-credits to castlelemongrab/parlance)"
+author: Marcel Schliebs and Dorian Quelle
+date: January 10, 2020
 output: github_document
 ---
+
+# parleR
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
@@ -18,15 +23,20 @@ knitr::opts_chunk$set(
 [![CRAN status](https://www.r-pkg.org/badges/version/ggecon)](https://CRAN.R-project.org/package=ggecon)
 <!-- badges: end -->
 
+# Credits and Disclaimers
+
+Disclaimer 1: This package was just before release when Amazon announced the upcoming shut-down of Parler. While chances are high that this tool is broken by the time you read this lines, we wanted to get our current beta version out as quickly as possible to create at least a few hours of usefulness for the research community. We apologize for any bug you will be very likely to encounter, but the pending shut-down prevented us from implementing proper checks and doing extensive beta testing. 
 
 
+Disclaimer 2: This R package is a backend to the node.js based command line tool `parlance` published here: https://github.com/castlelemongrab/parlance/. We attribute full credits to the authors of parlance and ask you to equally credit them when using this package. Similar to the legal notes described here (https://github.com/castlelemongrab/parlance#legal), we do not take any responsibility for how you use the piece of software. We do not encouragement the breach of Terms of Service of any company, except in legally and ethically permitted cases, such as for academic research. See further the bottom of this document for additional legal notes. Copyright for Backend: 2020 The Parlance Team Copyright 2020 Baby Britain, Ltd.
 
-## Pre-Installation Steps and System Requirements
 
-### Installing node.js
+# Pre-Installation Steps and System Requirements
+
+## Installing node.js
 To use this software, node.js must be installed. Go to https://nodejs.org/en/download/ and select the version designed for your system. Following the automatic installation of node.js, you can use parleR. 
 
-### Installing parlance
+## Installing parlance
 This package is an R implementation of the software Parlance from https://github.com/castlelemongrab. To use it, please install parlance. Open a terminal window and enter:
 ```console
 npm install -g @castlelemongrab/parlance
@@ -76,7 +86,7 @@ Options:
   -f, --format           Select output format/type    [string] [default: "json"]
 ``` 
 
-### Creating a Parler Profile and Obtaining Cookies
+## Creating a Parler Profile and Obtaining Cookies
 
 Disclaimer: The end user uses this piece of software at their own legal
 responsibility. The authors do not take any responsibility for how you
@@ -86,17 +96,25 @@ cases.
 
 To use the software you must have a Parler account. After registering, you need to retrieve the cookies used by Parler. Instructions on how to extract cookies are given here for Firefox, Safari and Chrome: 
 
-#### Safari
+### Safari
 Right click and select "inspect Element" from the drop down menu. In the window that pops up, select Storage tab and then click on Cookies. Two cookies are displayed. 
 
-#### Chrome
+### Chrome
 Right-click and select "Inspect". This will open up the Chrome developer console. From the developer console, go to the Applications tab, and then expand the Cookies dropdown under the Storage section. Two cookies are displayed. 
 
+## Authenticating for Parlance via 
 
+To use this package, you first must authenticate `within` your project/working directory. Run the following function, which will write a file called auth.json into a folder called config. The file will have the format {"mst" : "s:........", "jst" : "....."}. 
 
-Disclaimer: The end user uses this piece of software at their own legal responsibility. The authors do not take any responsibility for how you use the piece of software. We do not encouragement the breach of Terms of Service of any company, except in legally and ethically permitted cases. 
+```{r,eval = F}
+parler_auth(decode = TRUE,
+            path = "config/auth.json",#DO NOT CHANGE
+            option = "enter")
+```
 
-## Installation and Loading
+Now you're ready to go. 
+
+# Installation and Loading
 
 ```{r eval = F}
 devtools::install_github("schliebs/parleR")
@@ -106,16 +124,15 @@ devtools::install_github("schliebs/parleR")
 library(parleR)
 ```
 
-```{r}
+
+```{r,message = F,warning = F}
 library(tidyverse)
+library(quanteda)
+library(lubridate)
 ```
 
 
-## API Authentication
-
-There are two options to set a CT API token and save it in the system environment. The first one is to trigger an RStudio window opening, and entering the token.
-
-## Get Posts by Username
+# Get Posts by Username
 
 ```{r,message = F,warning = F}
 post_df1 <- 
@@ -125,22 +142,98 @@ post_df1 <-
                parse_numbers = TRUE,
                verbose = TRUE)
 ```
+
 ```{r}
 colnames(post_df1)
 ```
 
 ```{r}
 post_df1 %>% 
-  dplyr::select(creator_username,createdAt,impressions,upvotes,body)
+  dplyr::select(creator_username,body,impressions,upvotes,createdAt)
 ```
 
-## Get all Posts with a certain Hashtag
+Plot weekly likes over time
+
+```{r,message = F,warning = F}
+weekly_engagement <- 
+  post_df1 %>% 
+  mutate(week = lubridate::round_date(as_datetime(createdAt),"weeks")) %>% 
+  group_by(week) %>% 
+  summarise(across(.cols = all_of(c("impressions","upvotes",
+                          "reposts","comments")),
+                   .fns = sum, 
+                   .names = "sum_{.col}")) %>% 
+  filter(week < as.Date("2021-01-10"))
+
+```
+```{r}
+ggplot(weekly_engagement %>% gather(var,val,-week)) + 
+  geom_line(aes(x = week,y = val)) + 
+  facet_wrap(~var,ncol = 2,scales = "free") + 
+  theme_minimal() + 
+  scale_x_datetime(date_breaks = "4 weeks",
+                   date_labels = "%m-%d") + 
+  theme(panel.grid.minor = element_blank()) + 
+  labs(title = "Weekly Engagement with Posts by 'Grenell'",
+       x = "Date",
+       y = "Weekly Amount of Engagement")
+```
+
+
+Same for 'EricTrump' (no idea if account is legit):
+
+
+```{r,message = F,warning = F}
+post_df2 <- 
+  parler_posts(user = "EricTrump",
+               output_format = "data.frame",
+               flatten_sep = " || ",
+               parse_numbers = TRUE,
+               verbose = TRUE)
+```
+
+
+```{r}
+post_df2 %>% 
+  dplyr::select(creator_username,body,impressions,upvotes,createdAt)
+```
+
+Plot weekly likes over time
+
+```{r,message = F,warning = F}
+weekly_engagement <- 
+  post_df2 %>% 
+  mutate(week = lubridate::round_date(as_datetime(createdAt),"weeks")) %>% 
+  group_by(week) %>% 
+  summarise(across(.cols = all_of(c("impressions","upvotes",
+                          "reposts","comments")),
+                   .fns = sum, 
+                   .names = "sum_{.col}")) %>% 
+  filter(week < as.Date("2021-01-10"))
+
+```
+```{r}
+ggplot(weekly_engagement %>% gather(var,val,-week)) + 
+  geom_line(aes(x = week,y = val)) + 
+  facet_wrap(~var,ncol = 2,scales = "free") + 
+  theme_minimal() + 
+  scale_x_datetime(date_breaks = "4 weeks",
+                   date_labels = "%m-%d") + 
+  theme(panel.grid.minor = element_blank()) + 
+  labs(title = "Weekly Engagement with Posts by 'EricTrump'",
+       x = "Date",
+       y = "Weekly Amount of Engagement")
+```
+
+
+
+# Get all Posts with a certain Hashtag
 
 Because there are thousands of posts, we time out the request after a certain amount of seconds.
 
 ```{r,message = F,warning = F}
 hashtag_posts_df1 <- 
-  parler_hashtag(hashtag = "nocovidvaccine",
+  parler_hashtag(hashtag = "maga",
                  output_format = "data.frame",
                  flatten_sep = " || ",
                  parse_numbers = TRUE,
@@ -155,26 +248,66 @@ colnames(hashtag_posts_df1)
 ```{r}
 hashtag_posts_df1 %>% 
   head(50) %>% 
-  dplyr::select(creator_username,createdAt,impressions,upvotes,body)
+  dplyr::select(creator_username,body,impressions,upvotes,createdAt)
 ```
 
+## Compare Key Words from two different hashtags
 
-## Get User Profile Data
+To be honest, this application does not really carry a lot of meaning, we just ran out of time before parler gets shut down and therefore opted for a quick and dirty comparison cloud. 
 
-### Raw JSON String
-
-NOT WORKING YET, FIX TOMORROW!
-
-```{r,eval = F}
-json_str <- 
-  parler_profile(user = "TuckerCarlson",
-                 output_format = "json",
+Scrape hashtags '#nocovidvaccine' and '#electionfraud'
+```{r,warning = F,message = F}
+vaxx_hashtags <- 
+  parler_hashtag(hashtag = "nocovidvaccine",
+                 output_format = "data.frame",
                  flatten_sep = " || ",
-                 verbose = FALSE)
+                 parse_numbers = TRUE,
+                 verbose = F,
+                 timeout = 30) %>% 
+  mutate(ht = "#nocovidvaccine")
+
+electionfraud_hashtags <- 
+  parler_hashtag(hashtag = "electionfraud",
+                 output_format = "data.frame",
+                 flatten_sep = " || ",
+                 parse_numbers = TRUE,
+                 verbose = F,
+                 timeout = 30) %>% 
+  mutate(ht = "#electionfraud")
+```
+
+Wordcloud:
+
+```{r}
+both <- bind_rows(vaxx_hashtags,electionfraud_hashtags)
+
+corpus <- quanteda::corpus(both %>% rename(text = body))
+
+dfmat <- dfm(corpus_subset(corpus, 
+                            ht %in% c("#electionfraud", "#nocovidvaccine")),
+              remove = stopwords("english"), 
+              remove_punct = TRUE, 
+              groups = "ht") %>%
+    dfm_trim(min_termfreq = 3)
 ```
 
 
-### R data.frame (nested variables flattened)
+## Frequent Hashtags co-occuring with 'electionfraud' and 'nocovidvaccine'
+
+```{r,warning = F,message = F}
+textplot_wordcloud(dfmat, 
+                   min_size = 0.5,
+                   max_size = 3,
+                   comparison = TRUE, 
+                   max_words = 1000,
+                   color = c("blue", "red"))
+```
+
+
+
+# Get User Profile Data
+
+## R data.frame (nested variables flattened)
 
 ```{r}
 out <-
@@ -193,9 +326,10 @@ colnames(out)
 
 ```{r}
 out %>% 
-  select(name,username,followers,following,likes,posts,joined,bio)
+  select(name,username,followers,likes,posts,joined,bio)
 ```
-### Without Token-associated variables 
+
+## Without Token-associated variables 
 
 ```{r}
 out2 <-
@@ -217,7 +351,7 @@ New colnames which are only outputtet if `token_variables == TRUE`:
 colnames(out2) %>% .[!. %in% colnames(out)]
 ```
 
-### JSON List Object
+## JSON List Object
 
 ```{r}
 jlist <- 
@@ -232,7 +366,7 @@ str(jlist)
 ```
 
 
-### Multiple Users
+## Multiple Users
 
 ```{r}
 user_vec <- c("Marklevinshow","SeanHannity","Devinnunes","GovernorNoem",
@@ -254,6 +388,30 @@ out_df <-
 
 ```{r}
 out_df %>% 
-    select(name,username,followers,following,likes,posts,joined,bio)
+    select(name,username,followers,likes,posts,joined,bio)
 ```
+
+
+# Legal Remarks and Credits: 
+
+This package is a mere R-frontend wrapper to the backend provided by parlance (https://github.com/castlelemongrab/parlance). As your machine will be calling 'parlance' to scrape data, we emphatically repeat the legal nodes by the authors of parlance in this place. You can find them here: https://github.com/castlelemongrab/parlance#legal
+
+QUOTE:
+"This repository seeks to document the design of Parler as accurately and concisely as possible. Parler is of interest to researchers, political campaigns, civic engagement groups, law enforcement, anti-discrimination groups, and the public at large. The free speech conveyed in this repository is of timely and widespread public interest.
+
+If you choose to use this speech as part of an activity, please ensure your activity is ethical and legal within your jurisdiction. The author of this work of speech cannot, will not, and has no responsibility to control the behavior of others – in any jurisdiction, on any of Jupiter's mighty moons, or anywhere within the known universe – past, present, or future.
+
+Due to the specific nature and quality of Parler's engineering design, the speech contained within this repository is the sole product of unrelated industry experience and third-party documentation. No act of disassembly, decompilation, reverse engineering, trade secret violation – nor any other prohibited act – was necessary to create the work contained herein.
+
+"Communication does not lose constitutional protection as 'speech' simply because it is expressed in the language of computer code. Mathematical formulae and musical scores are written in 'code,' i.e. symbolic notations not comprehensible to the uninitiated, and yet both are covered by the First Amendment. If someone chose to write a novel entirely in computer object code by using strings of 1’s and 0’s for each letter of each word, the resulting work would be no different for constitutional purposes than if it had been written in English." – DMCA, Universal City Studios v. Corley, FN191: 273 F.3d 429, 60 USPQ2d 1953 (2nd Cir. 2001)
+
+Congress shall make no law respecting an establishment of religion, or prohibiting the free exercise thereof; or abridging the freedom of speech, or of the press; or the right of the people peaceably to assemble, and to petition the Government for a redress of grievances.
+"
+
+
+Copyright for Backend: 2020 The Parlance Team Copyright 2020 Baby Britain, Ltd.
+
+License Statement for Parlance Backend: 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 

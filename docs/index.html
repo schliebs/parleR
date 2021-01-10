@@ -46,33 +46,6 @@
 <li>
   <a href="reference/index.html">Reference</a>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-<li>
-      <a href="articles/auth.html">Authenticate Parler Tokens</a>
-    </li>
-    <li>
-      <a href="articles/comments.html">Scrape all Comments per User or Post</a>
-    </li>
-    <li>
-      <a href="articles/parler_hashtag.html">Scrape Parleys by Hashtag</a>
-    </li>
-    <li>
-      <a href="articles/parler_posts.html">Scrape Parleys by a User</a>
-    </li>
-    <li>
-      <a href="articles/profile.html">Get User Profile Info</a>
-    </li>
-    <li>
-      <a href="articles/votes.html">Scrape all Votes made by a User</a>
-    </li>
-  </ul>
-</li>
       </ul>
 <ul class="nav navbar-nav navbar-right"></ul>
 </div>
@@ -87,51 +60,117 @@
       </header><div class="row">
   <div class="contents col-md-9">
 
+<p>parleR: An R-Interface to Parler.com (backend-credits to castlelemongrab/parlance) ================ Marcel Schliebs and Dorian Quelle January 10, 2020</p>
+<div id="parler" class="section level1">
+<div class="page-header"><h1 class="hasAnchor">
+<a href="#parler" class="anchor"></a>parleR</h1></div>
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+<!-- badges: start -->
+<p><a href="https://www.tidyverse.org/lifecycle/#experimental"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a> <a href="https://CRAN.R-project.org/package=ggecon"><img src="https://www.r-pkg.org/badges/version/ggecon" alt="CRAN status"></a> <!-- badges: end --></p>
+</div>
+<div id="credits-and-disclaimers" class="section level1">
+<h1 class="hasAnchor">
+<a href="#credits-and-disclaimers" class="anchor"></a>Credits and Disclaimers</h1>
+<p>Disclaimer 1: This package was just before release when Amazon announced the upcoming shut-down of Parler. While chances are high that this tool is broken by the time you read this lines, we wanted to get our current beta version out as quickly as possible to create at least a few hours of usefulness for the research community. We apologize for any bug you will be very likely to encounter, but the pending shut-down prevented us from implementing proper checks and doing extensive beta testing.</p>
+<p>Disclaimer 2: This R package is a backend to the node.js based command line tool <code>parlance</code> published here: <a href="https://github.com/castlelemongrab/parlance/" class="uri">https://github.com/castlelemongrab/parlance/</a>. We attribute full credits to the authors of parlance and ask you to equally credit them when using this package. Similar to the legal notes described here (<a href="https://github.com/castlelemongrab/parlance#legal" class="uri">https://github.com/castlelemongrab/parlance#legal</a>), we do not take any responsibility for how you use the piece of software. We do not encouragement the breach of Terms of Service of any company, except in legally and ethically permitted cases, such as for academic research. See further the bottom of this document for additional legal notes. Copyright for Backend: 2020 The Parlance Team Copyright 2020 Baby Britain, Ltd.</p>
+</div>
+<div id="pre-installation-steps-and-system-requirements" class="section level1">
+<h1 class="hasAnchor">
+<a href="#pre-installation-steps-and-system-requirements" class="anchor"></a>Pre-Installation Steps and System Requirements</h1>
+<div id="installing-nodejs" class="section level2">
+<h2 class="hasAnchor">
+<a href="#installing-nodejs" class="anchor"></a>Installing node.js</h2>
+<p>To use this software, node.js must be installed. Go to <a href="https://nodejs.org/en/download/" class="uri">https://nodejs.org/en/download/</a> and select the version designed for your system. Following the automatic installation of node.js, you can use parleR.</p>
+</div>
+<div id="installing-parlance" class="section level2">
+<h2 class="hasAnchor">
+<a href="#installing-parlance" class="anchor"></a>Installing parlance</h2>
+<p>This package is an R implementation of the software Parlance from <a href="https://github.com/castlelemongrab" class="uri">https://github.com/castlelemongrab</a>. To use it, please install parlance. Open a terminal window and enter:</p>
+<pre class="console"><code>npm install -g @castlelemongrab/parlance</code></pre>
+<p>To check whether the installation was successful, enter:</p>
+<pre class="console"><code>parlance</code></pre>
+<p>The output should look like this:</p>
+<pre class="console"><code>Commands:
+  parlance init        Create an authorization file
+  parlance feed        Fetch your own feed of posts
+  parlance profile     Fetch a user profile
+  parlance post        Fetch a single post by identifier
+  parlance posts       Fetch all posts for a user
+  parlance following   Fetch all users followed by a user
+  parlance followers   Fetch all followers of a user
+  parlance comments    Fetch all comments for a user, post, or comment
+  parlance tags        Fetch all posts mentioning a hashtag
+  parlance votes       Fetch all votes made by a user
+  parlance write       Post a new message to your account
+  parlance delete      Delete an existing message from your account
+  parlance follow      Follow a user
+  parlance unfollow    Unfollow an already-followed user
+  parlance mute        Mute a user
+  parlance news        Fetch your own affiliate news feed
+  parlance moderation  Fetch your list of comments for moderation
 
-<div id="pre-installation-steps-and-system-requirements" class="section level2">
+Options:
+  --help                 Show help                                     [boolean]
+  --version              Show version number                           [boolean]
+  --show-hidden          Show hidden options                           [boolean]
+  --format-options       Provide format/type-specific options           [string]
+  -c, --credentials      MST/JST tokens   [string] [default: "config/auth.json"]
+  -o, --credentials-out  Output file for client credentials             [string]
+  -S, --start-key        Specify a time-series start/resume key         [string]
+  -E, --end-key          Specify a time-series end/halt key             [string]
+  -l, --ignore-last      Rely solely upon time comparisons             [boolean]
+  -n, --no-delay         Disable the failsafe rate-limiter             [boolean]
+  -p, --page-size        Request a specific page size                   [number]
+  -d, --debug            Print all debug information to stderr         [boolean]
+  -v, --verbose          Print verbose information to stderr           [boolean]
+  -q, --quiet            Print less information to stderr              [boolean]
+  -s, --silent           Print absolutely no information to stderr     [boolean]
+  -e, --expand           Expand specific UUID types     [array] [default: "all"]
+  -f, --format           Select output format/type    [string] [default: "json"]</code></pre>
+</div>
+<div id="creating-a-parler-profile-and-obtaining-cookies" class="section level2">
 <h2 class="hasAnchor">
-<a href="#pre-installation-steps-and-system-requirements" class="anchor"></a>Pre-Installation Steps and System Requirements</h2>
-<div id="installing-nodejs" class="section level3">
-<h3 class="hasAnchor">
-<a href="#installing-nodejs" class="anchor"></a>Installing node.js</h3>
-</div>
-<div id="installing-parlance" class="section level3">
-<h3 class="hasAnchor">
-<a href="#installing-parlance" class="anchor"></a>Installing parlance</h3>
-</div>
-<div id="creating-a-parler-profile-and-obtaining-cookies" class="section level3">
-<h3 class="hasAnchor">
-<a href="#creating-a-parler-profile-and-obtaining-cookies" class="anchor"></a>Creating a Parler Profile and Obtaining Cookies</h3>
+<a href="#creating-a-parler-profile-and-obtaining-cookies" class="anchor"></a>Creating a Parler Profile and Obtaining Cookies</h2>
 <p>Disclaimer: The end user uses this piece of software at their own legal responsibility. The authors do not take any responsibility for how you use the piece of software. We do not encouragement the breach of Terms of Service of any company, except in legally and ethically permitted cases.</p>
+<p>To use the software you must have a Parler account. After registering, you need to retrieve the cookies used by Parler. Instructions on how to extract cookies are given here for Firefox, Safari and Chrome:</p>
+<div id="safari" class="section level3">
+<h3 class="hasAnchor">
+<a href="#safari" class="anchor"></a>Safari</h3>
+<p>Right click and select “inspect Element” from the drop down menu. In the window that pops up, select Storage tab and then click on Cookies. Two cookies are displayed.</p>
+</div>
+<div id="chrome" class="section level3">
+<h3 class="hasAnchor">
+<a href="#chrome" class="anchor"></a>Chrome</h3>
+<p>Right-click and select “Inspect”. This will open up the Chrome developer console. From the developer console, go to the Applications tab, and then expand the Cookies dropdown under the Storage section. Two cookies are displayed.</p>
 </div>
 </div>
-<div id="installation-and-loading" class="section level2">
+<div id="authenticating-for-parlance-via" class="section level2">
 <h2 class="hasAnchor">
-<a href="#installation-and-loading" class="anchor"></a>Installation and Loading</h2>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"schliebs/parleR"</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">parleR</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span>
-<span class="co">#&gt; -- Attaching packages --------------------------------------- tidyverse 1.3.0 --</span>
-<span class="co">#&gt; v ggplot2 3.3.2     v purrr   0.3.4</span>
-<span class="co">#&gt; v tibble  3.0.4     v dplyr   1.0.2</span>
-<span class="co">#&gt; v tidyr   1.1.2     v stringr 1.4.0</span>
-<span class="co">#&gt; v readr   1.4.0     v forcats 0.5.0</span>
-<span class="co">#&gt; -- Conflicts ------------------------------------------ tidyverse_conflicts() --</span>
-<span class="co">#&gt; x dplyr::filter() masks stats::filter()</span>
-<span class="co">#&gt; x dplyr::lag()    masks stats::lag()</span></code></pre></div>
-</div>
-<div id="api-authentication" class="section level2">
-<h2 class="hasAnchor">
-<a href="#api-authentication" class="anchor"></a>API Authentication</h2>
-<p>There are two options to set a CT API token and save it in the system environment. The first one is to trigger an RStudio window opening, and entering the token.</p>
-</div>
-<div id="get-posts-by-username" class="section level2">
-<h2 class="hasAnchor">
-<a href="#get-posts-by-username" class="anchor"></a>Get Posts by Username</h2>
+<a href="#authenticating-for-parlance-via" class="anchor"></a>Authenticating for Parlance via</h2>
+<p>To use this package, you first must authenticate <code>within</code> your project/working directory. Run the following function, which will write a file called auth.json into a folder called config. The file will have the format {“mst” : “s:……..”, “jst” : “…..”}.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="reference/parler_auth.html">parler_auth</a></span><span class="op">(</span>decode <span class="op">=</span> <span class="cn">TRUE</span>,
+            path <span class="op">=</span> <span class="st">"config/auth.json"</span>,<span class="co">#DO NOT CHANGE</span>
+            option <span class="op">=</span> <span class="st">"enter"</span><span class="op">)</span></code></pre></div>
+<p>Now you’re ready to go.</p>
+</div>
+</div>
+<div id="installation-and-loading" class="section level1">
+<h1 class="hasAnchor">
+<a href="#installation-and-loading" class="anchor"></a>Installation and Loading</h1>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"schliebs/parleR"</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">parleR</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://quanteda.io">quanteda</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://lubridate.tidyverse.org">lubridate</a></span><span class="op">)</span></code></pre></div>
+</div>
+<div id="get-posts-by-username" class="section level1">
+<h1 class="hasAnchor">
+<a href="#get-posts-by-username" class="anchor"></a>Get Posts by Username</h1>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">post_df1</span> <span class="op">&lt;-</span> 
   <span class="fu"><a href="reference/parler_posts.html">parler_posts</a></span><span class="op">(</span>user <span class="op">=</span> <span class="st">"Grenell"</span>,
                output_format <span class="op">=</span> <span class="st">"data.frame"</span>,
@@ -139,7 +178,7 @@
                parse_numbers <span class="op">=</span> <span class="cn">TRUE</span>,
                verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="co">#&gt; [1] "Scraping profile information for 'Grenell'. This might take a while."</span></code></pre></div>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">post_df1</span><span class="op">)</span>
 <span class="co">#&gt;  [1] "id1"                      "at"                      </span>
 <span class="co">#&gt;  [3] "article"                  "body"                    </span>
@@ -160,96 +199,205 @@
 <span class="co">#&gt; [33] "shareLink"                "sensitive"               </span>
 <span class="co">#&gt; [35] "state"                    "upvotes"                 </span>
 <span class="co">#&gt; [37] "parent"                   "root"</span></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">post_df1</span> <span class="op">%&gt;%</span> 
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">creator_username</span>,<span class="va">createdAt</span>,<span class="va">impressions</span>,<span class="va">upvotes</span>,<span class="va">body</span><span class="op">)</span>
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">creator_username</span>,<span class="va">body</span>,<span class="va">impressions</span>,<span class="va">upvotes</span>,<span class="va">createdAt</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 83 x 5</span>
-<span class="co">#&gt;    creator_username createdAt     impressions upvotes body                      </span>
-<span class="co">#&gt;    &lt;chr&gt;            &lt;chr&gt;               &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;                     </span>
-<span class="co">#&gt;  1 Grenell          2021-01-09T0~      241000    6500 "Start following people -~</span>
-<span class="co">#&gt;  2 Grenell          2021-01-09T0~      127000    1700 "Start following people -~</span>
-<span class="co">#&gt;  3 Grenell          2021-01-07T0~      298000    2300 "I’ll be on with @SeanHan~</span>
-<span class="co">#&gt;  4 Grenell          2021-01-03T1~      333000    2500 ""                        </span>
-<span class="co">#&gt;  5 Grenell          2021-01-03T1~      922000    9200 ""                        </span>
-<span class="co">#&gt;  6 Grenell          2021-01-03T1~      905000    9200 ""                        </span>
-<span class="co">#&gt;  7 Grenell          2021-01-01T2~      333000    2500 "New year means opening u~</span>
-<span class="co">#&gt;  8 Grenell          2020-12-31T1~      147000    1500 ""                        </span>
-<span class="co">#&gt;  9 Grenell          2020-12-26T1~      410000    3900 ""                        </span>
-<span class="co">#&gt; 10 Grenell          2020-12-25T1~      410000    3900 "Today I’m thinking of th~</span>
+<span class="co">#&gt;    creator_username body                        impressions upvotes createdAt   </span>
+<span class="co">#&gt;    &lt;chr&gt;            &lt;chr&gt;                             &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;       </span>
+<span class="co">#&gt;  1 Grenell          "Start following people - ~      245000    6600 2021-01-09T~</span>
+<span class="co">#&gt;  2 Grenell          "Start following people - ~      129000    1700 2021-01-09T~</span>
+<span class="co">#&gt;  3 Grenell          "I’ll be on with @SeanHann~      299000    2300 2021-01-07T~</span>
+<span class="co">#&gt;  4 Grenell          ""                               336000    2500 2021-01-03T~</span>
+<span class="co">#&gt;  5 Grenell          ""                               925000    9200 2021-01-03T~</span>
+<span class="co">#&gt;  6 Grenell          ""                               907000    9200 2021-01-03T~</span>
+<span class="co">#&gt;  7 Grenell          "New year means opening up~      336000    2500 2021-01-01T~</span>
+<span class="co">#&gt;  8 Grenell          ""                               148000    1500 2020-12-31T~</span>
+<span class="co">#&gt;  9 Grenell          ""                               413000    3900 2020-12-26T~</span>
+<span class="co">#&gt; 10 Grenell          "Today I’m thinking of tho~      413000    3900 2020-12-25T~</span>
 <span class="co">#&gt; # ... with 73 more rows</span></code></pre></div>
+<p>Plot weekly likes over time</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">weekly_engagement</span> <span class="op">&lt;-</span> 
+  <span class="va">post_df1</span> <span class="op">%&gt;%</span> 
+  <span class="fu">mutate</span><span class="op">(</span>week <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="http://lubridate.tidyverse.org/reference/round_date.html">round_date</a></span><span class="op">(</span><span class="fu"><a href="http://lubridate.tidyverse.org/reference/as_date.html">as_datetime</a></span><span class="op">(</span><span class="va">createdAt</span><span class="op">)</span>,<span class="st">"weeks"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">group_by</span><span class="op">(</span><span class="va">week</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">summarise</span><span class="op">(</span><span class="fu">across</span><span class="op">(</span>.cols <span class="op">=</span> <span class="fu">all_of</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"impressions"</span>,<span class="st">"upvotes"</span>,
+                          <span class="st">"reposts"</span>,<span class="st">"comments"</span><span class="op">)</span><span class="op">)</span>,
+                   .fns <span class="op">=</span> <span class="va">sum</span>, 
+                   .names <span class="op">=</span> <span class="st">"sum_{.col}"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">week</span> <span class="op">&lt;</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html">as.Date</a></span><span class="op">(</span><span class="st">"2021-01-10"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">ggplot</span><span class="op">(</span><span class="va">weekly_engagement</span> <span class="op">%&gt;%</span> <span class="fu">gather</span><span class="op">(</span><span class="va">var</span>,<span class="va">val</span>,<span class="op">-</span><span class="va">week</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">week</span>,y <span class="op">=</span> <span class="va">val</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu">facet_wrap</span><span class="op">(</span><span class="op">~</span><span class="va">var</span>,ncol <span class="op">=</span> <span class="fl">2</span>,scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu">theme_minimal</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu">scale_x_datetime</span><span class="op">(</span>date_breaks <span class="op">=</span> <span class="st">"4 weeks"</span>,
+                   date_labels <span class="op">=</span> <span class="st">"%m-%d"</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu">theme</span><span class="op">(</span>panel.grid.minor <span class="op">=</span> <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu">labs</span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Weekly Engagement with Posts by 'Grenell'"</span>,
+       x <span class="op">=</span> <span class="st">"Date"</span>,
+       y <span class="op">=</span> <span class="st">"Weekly Amount of Engagement"</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-10-1.png" width="100%"></p>
+<p>Same for ‘EricTrump’ (no idea if account is legit):</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">post_df2</span> <span class="op">&lt;-</span> 
+  <span class="fu"><a href="reference/parler_posts.html">parler_posts</a></span><span class="op">(</span>user <span class="op">=</span> <span class="st">"EricTrump"</span>,
+               output_format <span class="op">=</span> <span class="st">"data.frame"</span>,
+               flatten_sep <span class="op">=</span> <span class="st">" || "</span>,
+               parse_numbers <span class="op">=</span> <span class="cn">TRUE</span>,
+               verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="co">#&gt; [1] "Scraping profile information for 'EricTrump'. This might take a while."</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">post_df2</span> <span class="op">%&gt;%</span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">creator_username</span>,<span class="va">body</span>,<span class="va">impressions</span>,<span class="va">upvotes</span>,<span class="va">createdAt</span><span class="op">)</span>
+<span class="co">#&gt; # A tibble: 71 x 5</span>
+<span class="co">#&gt;    creator_username body                        impressions upvotes createdAt   </span>
+<span class="co">#&gt;    &lt;chr&gt;            &lt;chr&gt;                             &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;       </span>
+<span class="co">#&gt;  1 EricTrump        ""                             3800000    96000 2021-01-09T~</span>
+<span class="co">#&gt;  2 EricTrump        "Hello Friends!!! \U0001f1~    4100000.   68000 2021-01-09T~</span>
+<span class="co">#&gt;  3 EricTrump        "Congratulations to @Trump~    2700000    15000 2020-12-18T~</span>
+<span class="co">#&gt;  4 EricTrump        ""                             2200000    50000 2020-12-17T~</span>
+<span class="co">#&gt;  5 EricTrump        "Just chilling with Grandp~    2500000    64000 2020-12-16T~</span>
+<span class="co">#&gt;  6 EricTrump        "When you rearrange the sh~    2400000    32000 2020-12-12T~</span>
+<span class="co">#&gt;  7 EricTrump        "The shooting sports were ~    2200000    31000 2020-12-09T~</span>
+<span class="co">#&gt;  8 EricTrump        "Proud of @LaraleaTrump!!"     1800000    18000 2020-12-09T~</span>
+<span class="co">#&gt;  9 EricTrump        ""                             2200000    30000 2020-12-08T~</span>
+<span class="co">#&gt; 10 EricTrump        "Happy Saturday Friends!"      1400000    15000 2020-12-05T~</span>
+<span class="co">#&gt; # ... with 61 more rows</span></code></pre></div>
+<p>Plot weekly likes over time</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">weekly_engagement</span> <span class="op">&lt;-</span> 
+  <span class="va">post_df2</span> <span class="op">%&gt;%</span> 
+  <span class="fu">mutate</span><span class="op">(</span>week <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="http://lubridate.tidyverse.org/reference/round_date.html">round_date</a></span><span class="op">(</span><span class="fu"><a href="http://lubridate.tidyverse.org/reference/as_date.html">as_datetime</a></span><span class="op">(</span><span class="va">createdAt</span><span class="op">)</span>,<span class="st">"weeks"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">group_by</span><span class="op">(</span><span class="va">week</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">summarise</span><span class="op">(</span><span class="fu">across</span><span class="op">(</span>.cols <span class="op">=</span> <span class="fu">all_of</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"impressions"</span>,<span class="st">"upvotes"</span>,
+                          <span class="st">"reposts"</span>,<span class="st">"comments"</span><span class="op">)</span><span class="op">)</span>,
+                   .fns <span class="op">=</span> <span class="va">sum</span>, 
+                   .names <span class="op">=</span> <span class="st">"sum_{.col}"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">week</span> <span class="op">&lt;</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html">as.Date</a></span><span class="op">(</span><span class="st">"2021-01-10"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">ggplot</span><span class="op">(</span><span class="va">weekly_engagement</span> <span class="op">%&gt;%</span> <span class="fu">gather</span><span class="op">(</span><span class="va">var</span>,<span class="va">val</span>,<span class="op">-</span><span class="va">week</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">week</span>,y <span class="op">=</span> <span class="va">val</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu">facet_wrap</span><span class="op">(</span><span class="op">~</span><span class="va">var</span>,ncol <span class="op">=</span> <span class="fl">2</span>,scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu">theme_minimal</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu">scale_x_datetime</span><span class="op">(</span>date_breaks <span class="op">=</span> <span class="st">"4 weeks"</span>,
+                   date_labels <span class="op">=</span> <span class="st">"%m-%d"</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu">theme</span><span class="op">(</span>panel.grid.minor <span class="op">=</span> <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu">labs</span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Weekly Engagement with Posts by 'EricTrump'"</span>,
+       x <span class="op">=</span> <span class="st">"Date"</span>,
+       y <span class="op">=</span> <span class="st">"Weekly Amount of Engagement"</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-14-1.png" width="100%"></p>
 </div>
-<div id="get-all-posts-with-a-certain-hashtag" class="section level2">
-<h2 class="hasAnchor">
-<a href="#get-all-posts-with-a-certain-hashtag" class="anchor"></a>Get all Posts with a certain Hashtag</h2>
+<div id="get-all-posts-with-a-certain-hashtag" class="section level1">
+<h1 class="hasAnchor">
+<a href="#get-all-posts-with-a-certain-hashtag" class="anchor"></a>Get all Posts with a certain Hashtag</h1>
 <p>Because there are thousands of posts, we time out the request after a certain amount of seconds.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">hashtag_posts_df1</span> <span class="op">&lt;-</span> 
-  <span class="fu"><a href="reference/parler_hashtag.html">parler_hashtag</a></span><span class="op">(</span>hashtag <span class="op">=</span> <span class="st">"nocovidvaccine"</span>,
+  <span class="fu"><a href="reference/parler_hashtag.html">parler_hashtag</a></span><span class="op">(</span>hashtag <span class="op">=</span> <span class="st">"maga"</span>,
                  output_format <span class="op">=</span> <span class="st">"data.frame"</span>,
                  flatten_sep <span class="op">=</span> <span class="st">" || "</span>,
                  parse_numbers <span class="op">=</span> <span class="cn">TRUE</span>,
                  verbose <span class="op">=</span> <span class="cn">TRUE</span>,
                  timeout <span class="op">=</span> <span class="fl">60</span><span class="op">)</span>
-<span class="co">#&gt; [1] "Scraping Parley including hashtag '#nocovidvaccine'. This might take a while."</span></code></pre></div>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<span class="co">#&gt; [1] "Scraping Parley including hashtag '#maga'. This might take a while."</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">hashtag_posts_df1</span><span class="op">)</span>
 <span class="co">#&gt;  [1] "id1"                      "at"                      </span>
 <span class="co">#&gt;  [3] "article"                  "body"                    </span>
 <span class="co">#&gt;  [5] "comments"                 "createdAt"               </span>
 <span class="co">#&gt;  [7] "creator_id"               "creator_bio"             </span>
-<span class="co">#&gt;  [9] "creator_blocked"          "creator_coverPhoto"      </span>
-<span class="co">#&gt; [11] "creator_human"            "creator_integration"     </span>
-<span class="co">#&gt; [13] "creator_joined"           "creator_name"            </span>
-<span class="co">#&gt; [15] "creator_rss"              "creator_private"         </span>
-<span class="co">#&gt; [17] "creator_profilePhoto"     "creator_username"        </span>
-<span class="co">#&gt; [19] "creator_verified"         "creator_verifiedComments"</span>
-<span class="co">#&gt; [21] "creator_"                 "creator_score"           </span>
-<span class="co">#&gt; [23] "creator_interactions"     "creator_media"           </span>
-<span class="co">#&gt; [25] "creator_badges"           "depth"                   </span>
-<span class="co">#&gt; [27] "depthRaw"                 "hashtags"                </span>
-<span class="co">#&gt; [29] "id"                       "impressions"             </span>
-<span class="co">#&gt; [31] "links"                    "preview"                 </span>
-<span class="co">#&gt; [33] "reposts"                  "shareLink"               </span>
-<span class="co">#&gt; [35] "sensitive"                "state"                   </span>
-<span class="co">#&gt; [37] "upvotes"                  "creator_state"           </span>
-<span class="co">#&gt; [39] "parent"                   "root"</span></code></pre></div>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<span class="co">#&gt;  [9] "creator_blocked"          "creator_human"           </span>
+<span class="co">#&gt; [11] "creator_integration"      "creator_joined"          </span>
+<span class="co">#&gt; [13] "creator_name"             "creator_rss"             </span>
+<span class="co">#&gt; [15] "creator_private"          "creator_profilePhoto"    </span>
+<span class="co">#&gt; [17] "creator_username"         "creator_verified"        </span>
+<span class="co">#&gt; [19] "creator_verifiedComments" "creator_score"           </span>
+<span class="co">#&gt; [21] "creator_interactions"     "creator_state"           </span>
+<span class="co">#&gt; [23] "creator_media"            "creator_badges"          </span>
+<span class="co">#&gt; [25] "depth"                    "depthRaw"                </span>
+<span class="co">#&gt; [27] "hashtags"                 "id"                      </span>
+<span class="co">#&gt; [29] "impressions"              "links"                   </span>
+<span class="co">#&gt; [31] "preview"                  "reposts"                 </span>
+<span class="co">#&gt; [33] "shareLink"                "sensitive"               </span>
+<span class="co">#&gt; [35] "state"                    "upvotes"                 </span>
+<span class="co">#&gt; [37] "creator_coverPhoto"       "parent"                  </span>
+<span class="co">#&gt; [39] "root"                     "creator_"</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">hashtag_posts_df1</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fl">50</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">creator_username</span>,<span class="va">createdAt</span>,<span class="va">impressions</span>,<span class="va">upvotes</span>,<span class="va">body</span><span class="op">)</span>
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">creator_username</span>,<span class="va">body</span>,<span class="va">impressions</span>,<span class="va">upvotes</span>,<span class="va">createdAt</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 50 x 5</span>
-<span class="co">#&gt;    creator_username  createdAt    impressions upvotes body                      </span>
-<span class="co">#&gt;    &lt;chr&gt;             &lt;chr&gt;              &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;                     </span>
-<span class="co">#&gt;  1 Bbobby            2021-01-10T~         588       6 "Just cause I'd like to s~</span>
-<span class="co">#&gt;  2 danthevann        2021-01-10T~          23       0 "This free speech stuff i~</span>
-<span class="co">#&gt;  3 Bbobby            2021-01-10T~         580       4 "Vigano \n#StopTheSteal #~</span>
-<span class="co">#&gt;  4 GnarshipEnterpri~ 2021-01-10T~         312       5 "Did you hear about a new~</span>
-<span class="co">#&gt;  5 shadowdances      2021-01-10T~         192       0 "#vaccines #vaccineinjury~</span>
-<span class="co">#&gt;  6 Scritchbeat       2021-01-10T~        2000      10 "#VoterFraud #StopTheStea~</span>
-<span class="co">#&gt;  7 Scritchbeat       2021-01-10T~        2100      12 "#VoterFraud #StopTheStea~</span>
-<span class="co">#&gt;  8 Scritchbeat       2021-01-10T~        2100      13 "#VoterFraud #StopTheStea~</span>
-<span class="co">#&gt;  9 Bushpilot182      2021-01-10T~         456       1 "Covid Vaccine Death\n\n#~</span>
-<span class="co">#&gt; 10 Scritchbeat       2021-01-10T~        2500      12 "#VoterFraud #StopTheStea~</span>
+<span class="co">#&gt;    creator_username body                        impressions upvotes createdAt   </span>
+<span class="co">#&gt;    &lt;chr&gt;            &lt;chr&gt;                             &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;       </span>
+<span class="co">#&gt;  1 Ivanka2020       "Hey Republicans,\n\nTrump~         351       4 2021-01-10T~</span>
+<span class="co">#&gt;  2 Areebanaseem113  "#FightForTrump #TRUMP2020~         961       8 2021-01-10T~</span>
+<span class="co">#&gt;  3 Slime83          "#SlimeMoldParler says FUC~         307       1 2021-01-10T~</span>
+<span class="co">#&gt;  4 MartyLevine      "If “Amazon” is jumping in~          50       1 2021-01-10T~</span>
+<span class="co">#&gt;  5 TrumpTrainTeam   "#stopthesteal #VoterFraud~         838      19 2021-01-10T~</span>
+<span class="co">#&gt;  6 WarrenPeace310   "Pence is a traitor and al~         440       4 2021-01-10T~</span>
+<span class="co">#&gt;  7 Hikkijorza       "Election Update: Trump Le~         716       4 2021-01-10T~</span>
+<span class="co">#&gt;  8 Gayslime         "#SlimeMoldParler says FUC~         303       1 2021-01-10T~</span>
+<span class="co">#&gt;  9 PATRIOTGANGSTER  "When you point your finge~         314       5 2021-01-10T~</span>
+<span class="co">#&gt; 10 Doggoslime       "#SlimeMoldParler says FUC~         446       1 2021-01-10T~</span>
 <span class="co">#&gt; # ... with 40 more rows</span></code></pre></div>
-</div>
-<div id="get-user-profile-data" class="section level2">
+<div id="compare-key-words-from-two-different-hashtags" class="section level2">
 <h2 class="hasAnchor">
-<a href="#get-user-profile-data" class="anchor"></a>Get User Profile Data</h2>
-<div id="raw-json-string" class="section level3">
-<h3 class="hasAnchor">
-<a href="#raw-json-string" class="anchor"></a>Raw JSON String</h3>
-<p>NOT WORKING YET, FIX TOMORROW!</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">json_str</span> <span class="op">&lt;-</span> 
-  <span class="fu"><a href="reference/parler_profile.html">parler_profile</a></span><span class="op">(</span>user <span class="op">=</span> <span class="st">"TuckerCarlson"</span>,
-                 output_format <span class="op">=</span> <span class="st">"json"</span>,
+<a href="#compare-key-words-from-two-different-hashtags" class="anchor"></a>Compare Key Words from two different hashtags</h2>
+<p>To be honest, this application does not really carry a lot of meaning, we just ran out of time before parler gets shut down and therefore opted for a quick and dirty comparison cloud.</p>
+<p>Scrape hashtags ‘#nocovidvaccine’ and ‘#electionfraud’</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">vaxx_hashtags</span> <span class="op">&lt;-</span> 
+  <span class="fu"><a href="reference/parler_hashtag.html">parler_hashtag</a></span><span class="op">(</span>hashtag <span class="op">=</span> <span class="st">"nocovidvaccine"</span>,
+                 output_format <span class="op">=</span> <span class="st">"data.frame"</span>,
                  flatten_sep <span class="op">=</span> <span class="st">" || "</span>,
-                 verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+                 parse_numbers <span class="op">=</span> <span class="cn">TRUE</span>,
+                 verbose <span class="op">=</span> <span class="cn">F</span>,
+                 timeout <span class="op">=</span> <span class="fl">30</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">mutate</span><span class="op">(</span>ht <span class="op">=</span> <span class="st">"#nocovidvaccine"</span><span class="op">)</span>
+
+<span class="va">electionfraud_hashtags</span> <span class="op">&lt;-</span> 
+  <span class="fu"><a href="reference/parler_hashtag.html">parler_hashtag</a></span><span class="op">(</span>hashtag <span class="op">=</span> <span class="st">"electionfraud"</span>,
+                 output_format <span class="op">=</span> <span class="st">"data.frame"</span>,
+                 flatten_sep <span class="op">=</span> <span class="st">" || "</span>,
+                 parse_numbers <span class="op">=</span> <span class="cn">TRUE</span>,
+                 verbose <span class="op">=</span> <span class="cn">F</span>,
+                 timeout <span class="op">=</span> <span class="fl">30</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">mutate</span><span class="op">(</span>ht <span class="op">=</span> <span class="st">"#electionfraud"</span><span class="op">)</span></code></pre></div>
+<p>Wordcloud:</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">both</span> <span class="op">&lt;-</span> <span class="fu">bind_rows</span><span class="op">(</span><span class="va">vaxx_hashtags</span>,<span class="va">electionfraud_hashtags</span><span class="op">)</span>
+
+<span class="va">corpus</span> <span class="op">&lt;-</span> <span class="fu">quanteda</span><span class="fu">::</span><span class="fu"><a href="https://quanteda.io/reference/corpus.html">corpus</a></span><span class="op">(</span><span class="va">both</span> <span class="op">%&gt;%</span> <span class="fu">rename</span><span class="op">(</span>text <span class="op">=</span> <span class="va">body</span><span class="op">)</span><span class="op">)</span>
+
+<span class="va">dfmat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/dfm.html">dfm</a></span><span class="op">(</span><span class="fu"><a href="https://quanteda.io/reference/corpus_subset.html">corpus_subset</a></span><span class="op">(</span><span class="va">corpus</span>, 
+                            <span class="va">ht</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"#electionfraud"</span>, <span class="st">"#nocovidvaccine"</span><span class="op">)</span><span class="op">)</span>,
+              remove <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/stopwords/man/stopwords.html">stopwords</a></span><span class="op">(</span><span class="st">"english"</span><span class="op">)</span>, 
+              remove_punct <span class="op">=</span> <span class="cn">TRUE</span>, 
+              groups <span class="op">=</span> <span class="st">"ht"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="https://quanteda.io/reference/dfm_trim.html">dfm_trim</a></span><span class="op">(</span>min_termfreq <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="r-dataframe-nested-variables-flattened" class="section level3">
-<h3 class="hasAnchor">
-<a href="#r-dataframe-nested-variables-flattened" class="anchor"></a>R data.frame (nested variables flattened)</h3>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div id="frequent-hashtags-co-occuring-with-electionfraud-and-nocovidvaccine" class="section level2">
+<h2 class="hasAnchor">
+<a href="#frequent-hashtags-co-occuring-with-electionfraud-and-nocovidvaccine" class="anchor"></a>Frequent Hashtags co-occuring with ‘electionfraud’ and ‘nocovidvaccine’</h2>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://quanteda.io/reference/textplot_wordcloud.html">textplot_wordcloud</a></span><span class="op">(</span><span class="va">dfmat</span>, 
+                   min_size <span class="op">=</span> <span class="fl">0.5</span>,
+                   max_size <span class="op">=</span> <span class="fl">3</span>,
+                   comparison <span class="op">=</span> <span class="cn">TRUE</span>, 
+                   max_words <span class="op">=</span> <span class="fl">1000</span>,
+                   color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"blue"</span>, <span class="st">"red"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-20-1.png" width="100%"></p>
+</div>
+</div>
+<div id="get-user-profile-data" class="section level1">
+<h1 class="hasAnchor">
+<a href="#get-user-profile-data" class="anchor"></a>Get User Profile Data</h1>
+<div id="r-dataframe-nested-variables-flattened" class="section level2">
+<h2 class="hasAnchor">
+<a href="#r-dataframe-nested-variables-flattened" class="anchor"></a>R data.frame (nested variables flattened)</h2>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">out</span> <span class="op">&lt;-</span>
   <span class="fu"><a href="reference/parler_profile.html">parler_profile</a></span><span class="op">(</span>user <span class="op">=</span> <span class="st">"caseybmulligan"</span>,
                  output_format <span class="op">=</span> <span class="st">"data.frame"</span>,
@@ -259,7 +407,7 @@
                  verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="co">#&gt; [1] "Scraping profile information for caseybmulligan"</span>
 <span class="co">#&gt; Warning: Flattened variable 'badges' of length 2 with separator ' || '</span></code></pre></div>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span>
 <span class="co">#&gt;  [1] "accountColor"     "bio"              "blocked"          "coverPhoto"      </span>
 <span class="co">#&gt;  [5] "human"            "id"               "integration"      "joined"          </span>
@@ -268,18 +416,18 @@
 <span class="co">#&gt; [17] "score"            "interactions"     "state"            "banned"          </span>
 <span class="co">#&gt; [21] "comments"         "followers"        "following"        "likes"           </span>
 <span class="co">#&gt; [25] "posts"            "media"</span></code></pre></div>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">out</span> <span class="op">%&gt;%</span> 
-  <span class="fu">select</span><span class="op">(</span><span class="va">name</span>,<span class="va">username</span>,<span class="va">followers</span>,<span class="va">following</span>,<span class="va">likes</span>,<span class="va">posts</span>,<span class="va">joined</span>,<span class="va">bio</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 1 x 8</span>
-<span class="co">#&gt;   name     username  followers following likes posts joined   bio               </span>
-<span class="co">#&gt;   &lt;chr&gt;    &lt;chr&gt;         &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;             </span>
-<span class="co">#&gt; 1 Casey B~ caseybmu~    121000        63   125 261   2020-10~ "You're Hired! Un~</span></code></pre></div>
+  <span class="fu">select</span><span class="op">(</span><span class="va">name</span>,<span class="va">username</span>,<span class="va">followers</span>,<span class="va">likes</span>,<span class="va">posts</span>,<span class="va">joined</span>,<span class="va">bio</span><span class="op">)</span>
+<span class="co">#&gt; # A tibble: 1 x 7</span>
+<span class="co">#&gt;   name      username   followers likes posts joined    bio                      </span>
+<span class="co">#&gt;   &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;                    </span>
+<span class="co">#&gt; 1 Casey B.~ caseybmul~    121000   126 261   2020-10-~ "You're Hired! Untold Su~</span></code></pre></div>
 </div>
-<div id="without-token-associated-variables" class="section level3">
-<h3 class="hasAnchor">
-<a href="#without-token-associated-variables" class="anchor"></a>Without Token-associated variables</h3>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div id="without-token-associated-variables" class="section level2">
+<h2 class="hasAnchor">
+<a href="#without-token-associated-variables" class="anchor"></a>Without Token-associated variables</h2>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">out2</span> <span class="op">&lt;-</span>
   <span class="fu"><a href="reference/parler_profile.html">parler_profile</a></span><span class="op">(</span>user <span class="op">=</span> <span class="st">"caseybmulligan"</span>,
                  output_format <span class="op">=</span> <span class="st">"data.frame"</span>,
@@ -289,7 +437,7 @@
                  verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="co">#&gt; [1] "Scraping profile information for caseybmulligan"</span>
 <span class="co">#&gt; Warning: Flattened variable 'badges' of length 2 with separator ' || '</span></code></pre></div>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">out2</span><span class="op">)</span>
 <span class="co">#&gt;  [1] "accountColor"     "bio"              "blocked"          "coverPhoto"      </span>
 <span class="co">#&gt;  [5] "followed"         "human"            "id"               "integration"     </span>
@@ -300,20 +448,20 @@
 <span class="co">#&gt; [25] "comments"         "followers"        "following"        "likes"           </span>
 <span class="co">#&gt; [29] "posts"            "media"</span></code></pre></div>
 <p>New colnames which are only outputtet if <code>token_variables == TRUE</code>:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">out2</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="va">.</span><span class="op">[</span><span class="op">!</span><span class="va">.</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span><span class="op">]</span>
 <span class="co">#&gt; [1] "followed"       "muted"          "pendingFollow"  "isFollowingYou"</span></code></pre></div>
 </div>
-<div id="json-list-object" class="section level3">
-<h3 class="hasAnchor">
-<a href="#json-list-object" class="anchor"></a>JSON List Object</h3>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div id="json-list-object" class="section level2">
+<h2 class="hasAnchor">
+<a href="#json-list-object" class="anchor"></a>JSON List Object</h2>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">jlist</span> <span class="op">&lt;-</span> 
   <span class="fu"><a href="reference/parler_profile.html">parler_profile</a></span><span class="op">(</span>user <span class="op">=</span> <span class="st">"caseybmulligan"</span>,
                  output_format <span class="op">=</span> <span class="st">"list"</span>,
                  flatten_sep <span class="op">=</span> <span class="st">" || "</span>,
                  verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">jlist</span><span class="op">)</span>
 <span class="co">#&gt; List of 31</span>
 <span class="co">#&gt;  $ _id             : chr "ccab997e08254afe9231c35857f95d81"</span>
@@ -338,22 +486,22 @@
 <span class="co">#&gt;  $ badges          :List of 2</span>
 <span class="co">#&gt;   ..$ : int 1</span>
 <span class="co">#&gt;   ..$ : int 0</span>
-<span class="co">#&gt;  $ score           : chr "44k"</span>
+<span class="co">#&gt;  $ score           : chr "45k"</span>
 <span class="co">#&gt;  $ interactions    : int 259</span>
 <span class="co">#&gt;  $ state           : int 1</span>
 <span class="co">#&gt;  $ banned          : logi FALSE</span>
 <span class="co">#&gt;  $ isFollowingYou  : logi FALSE</span>
 <span class="co">#&gt;  $ comments        : chr "50"</span>
 <span class="co">#&gt;  $ followers       : chr "121k"</span>
-<span class="co">#&gt;  $ following       : chr "63"</span>
-<span class="co">#&gt;  $ likes           : chr "125"</span>
+<span class="co">#&gt;  $ following       : chr "61"</span>
+<span class="co">#&gt;  $ likes           : chr "126"</span>
 <span class="co">#&gt;  $ posts           : chr "261"</span>
 <span class="co">#&gt;  $ media           : chr "27"</span></code></pre></div>
 </div>
-<div id="multiple-users" class="section level3">
-<h3 class="hasAnchor">
-<a href="#multiple-users" class="anchor"></a>Multiple Users</h3>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div id="multiple-users" class="section level2">
+<h2 class="hasAnchor">
+<a href="#multiple-users" class="anchor"></a>Multiple Users</h2>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">user_vec</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Marklevinshow"</span>,<span class="st">"SeanHannity"</span>,<span class="st">"Devinnunes"</span>,<span class="st">"GovernorNoem"</span>,
               <span class="st">"KTHopkins"</span>,<span class="st">"Westmonster"</span>,<span class="st">"TommyRobinson"</span><span class="op">)</span>
 
@@ -388,20 +536,32 @@
 <span class="co">#&gt; * ...21 -&gt; ...16</span>
 <span class="co">#&gt; New names:</span>
 <span class="co">#&gt; * ...20 -&gt; ...16</span></code></pre></div>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">out_df</span> <span class="op">%&gt;%</span> 
-    <span class="fu">select</span><span class="op">(</span><span class="va">name</span>,<span class="va">username</span>,<span class="va">followers</span>,<span class="va">following</span>,<span class="va">likes</span>,<span class="va">posts</span>,<span class="va">joined</span>,<span class="va">bio</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 7 x 8</span>
-<span class="co">#&gt;   name     username  followers following likes posts joined   bio               </span>
-<span class="co">#&gt;   &lt;chr&gt;    &lt;chr&gt;         &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;             </span>
-<span class="co">#&gt; 1 Mark Le~ Marklevi~   4900000         4     0 3.5k  2019-06~ "THIS IS THE OFFI~</span>
-<span class="co">#&gt; 2 Sean Ha~ SeanHann~   7600000         7     0 2.5k  2020-06~ "TV Host Fox News~</span>
-<span class="co">#&gt; 3 Devin N~ Devinnun~   2900000       160   528 1.7k  2020-02~  &lt;NA&gt;             </span>
-<span class="co">#&gt; 4 Gov. Kr~ Governor~    790000        36     0 40    2020-11~ "South Dakotan. W~</span>
-<span class="co">#&gt; 5 Katie H~ KTHopkins    473000         1     8 1.3k  2020-06~ "the Biggest Bitc~</span>
-<span class="co">#&gt; 6 Westmon~ Westmons~    149000         2     0 1.4k  2020-06~ "WESTMONSTER.COM ~</span>
-<span class="co">#&gt; 7 Tommy R~ TommyRob~    361000       248    94 6.8k  2019-06~ "I’m back \n\nhtt~</span></code></pre></div>
+    <span class="fu">select</span><span class="op">(</span><span class="va">name</span>,<span class="va">username</span>,<span class="va">followers</span>,<span class="va">likes</span>,<span class="va">posts</span>,<span class="va">joined</span>,<span class="va">bio</span><span class="op">)</span>
+<span class="co">#&gt; # A tibble: 7 x 7</span>
+<span class="co">#&gt;   name      username   followers likes posts joined    bio                      </span>
+<span class="co">#&gt;   &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;                    </span>
+<span class="co">#&gt; 1 Mark Lev~ Marklevin~   4900000     0 3.5k  2019-06-~ "THIS IS THE OFFICIAL MA~</span>
+<span class="co">#&gt; 2 Sean Han~ SeanHanni~   7600000     0 2.5k  2020-06-~ "TV Host Fox News Channe~</span>
+<span class="co">#&gt; 3 Devin Nu~ Devinnunes   2900000   528 1.7k  2020-02-~  &lt;NA&gt;                    </span>
+<span class="co">#&gt; 4 Gov. Kri~ GovernorN~    798000     0 40    2020-11-~ "South Dakotan. Wife. Mo~</span>
+<span class="co">#&gt; 5 Katie Ho~ KTHopkins     473000     8 1.3k  2020-06-~ "the Biggest Bitch in Br~</span>
+<span class="co">#&gt; 6 Westmons~ Westmonst~    149000     0 1.4k  2020-06-~ "WESTMONSTER.COM - News ~</span>
+<span class="co">#&gt; 7 Tommy Ro~ TommyRobi~    363000    94 6.8k  2019-06-~ "I’m back \n\nhttps://ww~</span></code></pre></div>
 </div>
+</div>
+<div id="legal-remarks-and-credits" class="section level1">
+<h1 class="hasAnchor">
+<a href="#legal-remarks-and-credits" class="anchor"></a>Legal Remarks and Credits:</h1>
+<p>This package is a mere R-frontend wrapper to the backend provided by parlance (<a href="https://github.com/castlelemongrab/parlance" class="uri">https://github.com/castlelemongrab/parlance</a>). As your machine will be calling ‘parlance’ to scrape data, we emphatically repeat the legal nodes by the authors of parlance in this place. You can find them here: <a href="https://github.com/castlelemongrab/parlance#legal" class="uri">https://github.com/castlelemongrab/parlance#legal</a></p>
+<p>QUOTE: "This repository seeks to document the design of Parler as accurately and concisely as possible. Parler is of interest to researchers, political campaigns, civic engagement groups, law enforcement, anti-discrimination groups, and the public at large. The free speech conveyed in this repository is of timely and widespread public interest.</p>
+<p>If you choose to use this speech as part of an activity, please ensure your activity is ethical and legal within your jurisdiction. The author of this work of speech cannot, will not, and has no responsibility to control the behavior of others – in any jurisdiction, on any of Jupiter’s mighty moons, or anywhere within the known universe – past, present, or future.</p>
+<p>Due to the specific nature and quality of Parler’s engineering design, the speech contained within this repository is the sole product of unrelated industry experience and third-party documentation. No act of disassembly, decompilation, reverse engineering, trade secret violation – nor any other prohibited act – was necessary to create the work contained herein.</p>
+<p>“Communication does not lose constitutional protection as ‘speech’ simply because it is expressed in the language of computer code. Mathematical formulae and musical scores are written in ‘code,’ i.e. symbolic notations not comprehensible to the uninitiated, and yet both are covered by the First Amendment. If someone chose to write a novel entirely in computer object code by using strings of 1’s and 0’s for each letter of each word, the resulting work would be no different for constitutional purposes than if it had been written in English.” – DMCA, Universal City Studios v. Corley, FN191: 273 F.3d 429, 60 USPQ2d 1953 (2nd Cir. 2001)</p>
+<p>Congress shall make no law respecting an establishment of religion, or prohibiting the free exercise thereof; or abridging the freedom of speech, or of the press; or the right of the people peaceably to assemble, and to petition the Government for a redress of grievances. "</p>
+<p>Copyright for Backend: 2020 The Parlance Team Copyright 2020 Baby Britain, Ltd.</p>
+<p>License Statement for Parlance Backend: THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
 </div>
 
   </div>
@@ -422,14 +582,7 @@
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
-<ul class="list-unstyled">
-<li><a href="https://www.tidyverse.org/lifecycle/#experimental"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
-<li><a href="https://CRAN.R-project.org/package=ggecon"><img src="https://www.r-pkg.org/badges/version/ggecon" alt="CRAN status"></a></li>
-</ul>
-</div>
-</div>
+  </div>
 </div>
 
 

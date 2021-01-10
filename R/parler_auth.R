@@ -22,6 +22,8 @@ parler_auth <- function(decode = TRUE,
     warning("Path must be './config/auth.json'")
   }
 
+  dir.create("./config", showWarnings = FALSE)
+
   if(option == "enter"){
     mst <- rstudioapi::askForPassword("Please enter your MST Token")
     jst <- rstudioapi::askForPassword("Please enter your JST Token")
