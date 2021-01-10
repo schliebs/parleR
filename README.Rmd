@@ -19,13 +19,80 @@ knitr::opts_chunk$set(
 <!-- badges: end -->
 
 
+
+
 ## Pre-Installation Steps and System Requirements
 
 ### Installing node.js
+To use this software, node.js must be installed. Go to https://nodejs.org/en/download/ and select the version designed for your system. Following the automatic installation of node.js, you can use parleR. 
 
 ### Installing parlance
+This package is an R implementation of the software Parlance from https://github.com/castlelemongrab. To use it, please install parlance. Open a terminal window and enter:
+```console
+npm install -g @castlelemongrab/parlance
+```
+To check whether the installation was successful, enter:
+``` console
+parlance
+``` 
+The output should look like this: 
+``` console
+Commands:
+  parlance init        Create an authorization file
+  parlance feed        Fetch your own feed of posts
+  parlance profile     Fetch a user profile
+  parlance post        Fetch a single post by identifier
+  parlance posts       Fetch all posts for a user
+  parlance following   Fetch all users followed by a user
+  parlance followers   Fetch all followers of a user
+  parlance comments    Fetch all comments for a user, post, or comment
+  parlance tags        Fetch all posts mentioning a hashtag
+  parlance votes       Fetch all votes made by a user
+  parlance write       Post a new message to your account
+  parlance delete      Delete an existing message from your account
+  parlance follow      Follow a user
+  parlance unfollow    Unfollow an already-followed user
+  parlance mute        Mute a user
+  parlance news        Fetch your own affiliate news feed
+  parlance moderation  Fetch your list of comments for moderation
+
+Options:
+  --help                 Show help                                     [boolean]
+  --version              Show version number                           [boolean]
+  --show-hidden          Show hidden options                           [boolean]
+  --format-options       Provide format/type-specific options           [string]
+  -c, --credentials      MST/JST tokens   [string] [default: "config/auth.json"]
+  -o, --credentials-out  Output file for client credentials             [string]
+  -S, --start-key        Specify a time-series start/resume key         [string]
+  -E, --end-key          Specify a time-series end/halt key             [string]
+  -l, --ignore-last      Rely solely upon time comparisons             [boolean]
+  -n, --no-delay         Disable the failsafe rate-limiter             [boolean]
+  -p, --page-size        Request a specific page size                   [number]
+  -d, --debug            Print all debug information to stderr         [boolean]
+  -v, --verbose          Print verbose information to stderr           [boolean]
+  -q, --quiet            Print less information to stderr              [boolean]
+  -s, --silent           Print absolutely no information to stderr     [boolean]
+  -e, --expand           Expand specific UUID types     [array] [default: "all"]
+  -f, --format           Select output format/type    [string] [default: "json"]
+``` 
 
 ### Creating a Parler Profile and Obtaining Cookies
+
+Disclaimer: The end user uses this piece of software at their own legal
+responsibility. The authors do not take any responsibility for how you
+use the piece of software. We do not encouragement the breach of Terms
+of Service of any company, except in legally and ethically permitted
+cases.
+
+To use the software you must have a Parler account. After registering, you need to retrieve the cookies used by Parler. Instructions on how to extract cookies are given here for Firefox, Safari and Chrome: 
+
+#### Safari
+Right click and select "inspect Element" from the drop down menu. In the window that pops up, select Storage tab and then click on Cookies. Two cookies are displayed. 
+
+#### Chrome
+Right-click and select "Inspect". This will open up the Chrome developer console. From the developer console, go to the Applications tab, and then expand the Cookies dropdown under the Storage section. Two cookies are displayed. 
+
+
 
 Disclaimer: The end user uses this piece of software at their own legal responsibility. The authors do not take any responsibility for how you use the piece of software. We do not encouragement the breach of Terms of Service of any company, except in legally and ethically permitted cases. 
 
