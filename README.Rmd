@@ -50,6 +50,48 @@ There are two options to set a CT API token and save it in the system environmen
 
 ## Get Posts by Username
 
+```{r,message = F,warning = F}
+post_df1 <- 
+  parler_posts(user = "Grenell",
+               output_format = "data.frame",
+               flatten_sep = " || ",
+               parse_numbers = TRUE,
+               verbose = TRUE)
+```
+```{r}
+colnames(post_df1)
+```
+
+```{r}
+post_df1 %>% 
+  dplyr::select(creator_username,createdAt,impressions,upvotes,body)
+```
+
+## Get all Posts with a certain Hashtag
+
+Because there are thousands of posts, we time out the request after a certain amount of seconds.
+
+```{r,message = F,warning = F}
+hashtag_posts_df1 <- 
+  parler_hashtag(hashtag = "nocovidvaccine",
+                 output_format = "data.frame",
+                 flatten_sep = " || ",
+                 parse_numbers = TRUE,
+                 verbose = TRUE,
+                 timeout = 60)
+```
+
+```{r}
+colnames(hashtag_posts_df1)
+```
+
+```{r}
+hashtag_posts_df1 %>% 
+  head(50) %>% 
+  dplyr::select(creator_username,createdAt,impressions,upvotes,body)
+```
+
+
 ## Get User Profile Data
 
 ### Raw JSON String

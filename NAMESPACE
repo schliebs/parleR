@@ -2,6 +2,8 @@
 
 export("%>%")
 export(parler_auth)
+export(parler_hashtag)
+export(parler_posts)
 export(parler_profile)
 export(parler_time)
 export(wait_till)

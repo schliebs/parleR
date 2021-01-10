@@ -54,7 +54,22 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="articles/auth.html">Authenticate Parler Tokens</a>
+    </li>
+    <li>
+      <a href="articles/comments.html">Scrape all Comments per User or Post</a>
+    </li>
+    <li>
+      <a href="articles/parler_hashtag.html">Scrape Parleys by Hashtag</a>
+    </li>
+    <li>
+      <a href="articles/parler_posts.html">Scrape Parleys by a User</a>
+    </li>
+    <li>
       <a href="articles/profile.html">Get User Profile Info</a>
+    </li>
+    <li>
+      <a href="articles/votes.html">Scrape all Votes made by a User</a>
     </li>
   </ul>
 </li>
@@ -72,22 +87,6 @@
       </header><div class="row">
   <div class="contents col-md-9">
 
-<ul>
-<li>
-<a href="#parler">parleR</a>
-<ul>
-<li><a href="#pre-installation-steps-and-system-requirements">Pre-Installation Steps and System Requirements</a></li>
-<li><a href="#installation-and-loading">Installation and Loading</a></li>
-<li><a href="#api-authentication">API Authentication</a></li>
-<li><a href="#get-posts-by-username">Get Posts by Username</a></li>
-<li><a href="#get-user-profile-data">Get User Profile Data</a></li>
-</ul>
-</li>
-</ul>
-<!-- README.md is generated from README.Rmd. Please edit that file --><div id="parler" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#parler" class="anchor"></a>parleR</h1></div>
-<!-- badges: start -->
 
 <div id="pre-installation-steps-and-system-requirements" class="section level2">
 <h2 class="hasAnchor">
@@ -132,6 +131,106 @@
 <div id="get-posts-by-username" class="section level2">
 <h2 class="hasAnchor">
 <a href="#get-posts-by-username" class="anchor"></a>Get Posts by Username</h2>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">post_df1</span> <span class="op">&lt;-</span> 
+  <span class="fu"><a href="reference/parler_posts.html">parler_posts</a></span><span class="op">(</span>user <span class="op">=</span> <span class="st">"Grenell"</span>,
+               output_format <span class="op">=</span> <span class="st">"data.frame"</span>,
+               flatten_sep <span class="op">=</span> <span class="st">" || "</span>,
+               parse_numbers <span class="op">=</span> <span class="cn">TRUE</span>,
+               verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="co">#&gt; [1] "Scraping profile information for 'Grenell'. This might take a while."</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">post_df1</span><span class="op">)</span>
+<span class="co">#&gt;  [1] "id1"                      "at"                      </span>
+<span class="co">#&gt;  [3] "article"                  "body"                    </span>
+<span class="co">#&gt;  [5] "comments"                 "createdAt"               </span>
+<span class="co">#&gt;  [7] "creator_id"               "creator_bio"             </span>
+<span class="co">#&gt;  [9] "creator_blocked"          "creator_human"           </span>
+<span class="co">#&gt; [11] "creator_integration"      "creator_joined"          </span>
+<span class="co">#&gt; [13] "creator_name"             "creator_rss"             </span>
+<span class="co">#&gt; [15] "creator_private"          "creator_profilePhoto"    </span>
+<span class="co">#&gt; [17] "creator_username"         "creator_verified"        </span>
+<span class="co">#&gt; [19] "creator_verifiedComments" "creator_"                </span>
+<span class="co">#&gt; [21] "creator_score"            "creator_interactions"    </span>
+<span class="co">#&gt; [23] "creator_media"            "creator_badges"          </span>
+<span class="co">#&gt; [25] "depth"                    "depthRaw"                </span>
+<span class="co">#&gt; [27] "hashtags"                 "id"                      </span>
+<span class="co">#&gt; [29] "impressions"              "links"                   </span>
+<span class="co">#&gt; [31] "preview"                  "reposts"                 </span>
+<span class="co">#&gt; [33] "shareLink"                "sensitive"               </span>
+<span class="co">#&gt; [35] "state"                    "upvotes"                 </span>
+<span class="co">#&gt; [37] "parent"                   "root"</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">post_df1</span> <span class="op">%&gt;%</span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">creator_username</span>,<span class="va">createdAt</span>,<span class="va">impressions</span>,<span class="va">upvotes</span>,<span class="va">body</span><span class="op">)</span>
+<span class="co">#&gt; # A tibble: 83 x 5</span>
+<span class="co">#&gt;    creator_username createdAt     impressions upvotes body                      </span>
+<span class="co">#&gt;    &lt;chr&gt;            &lt;chr&gt;               &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;                     </span>
+<span class="co">#&gt;  1 Grenell          2021-01-09T0~      241000    6500 "Start following people -~</span>
+<span class="co">#&gt;  2 Grenell          2021-01-09T0~      127000    1700 "Start following people -~</span>
+<span class="co">#&gt;  3 Grenell          2021-01-07T0~      298000    2300 "I’ll be on with @SeanHan~</span>
+<span class="co">#&gt;  4 Grenell          2021-01-03T1~      333000    2500 ""                        </span>
+<span class="co">#&gt;  5 Grenell          2021-01-03T1~      922000    9200 ""                        </span>
+<span class="co">#&gt;  6 Grenell          2021-01-03T1~      905000    9200 ""                        </span>
+<span class="co">#&gt;  7 Grenell          2021-01-01T2~      333000    2500 "New year means opening u~</span>
+<span class="co">#&gt;  8 Grenell          2020-12-31T1~      147000    1500 ""                        </span>
+<span class="co">#&gt;  9 Grenell          2020-12-26T1~      410000    3900 ""                        </span>
+<span class="co">#&gt; 10 Grenell          2020-12-25T1~      410000    3900 "Today I’m thinking of th~</span>
+<span class="co">#&gt; # ... with 73 more rows</span></code></pre></div>
+</div>
+<div id="get-all-posts-with-a-certain-hashtag" class="section level2">
+<h2 class="hasAnchor">
+<a href="#get-all-posts-with-a-certain-hashtag" class="anchor"></a>Get all Posts with a certain Hashtag</h2>
+<p>Because there are thousands of posts, we time out the request after a certain amount of seconds.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">hashtag_posts_df1</span> <span class="op">&lt;-</span> 
+  <span class="fu"><a href="reference/parler_hashtag.html">parler_hashtag</a></span><span class="op">(</span>hashtag <span class="op">=</span> <span class="st">"nocovidvaccine"</span>,
+                 output_format <span class="op">=</span> <span class="st">"data.frame"</span>,
+                 flatten_sep <span class="op">=</span> <span class="st">" || "</span>,
+                 parse_numbers <span class="op">=</span> <span class="cn">TRUE</span>,
+                 verbose <span class="op">=</span> <span class="cn">TRUE</span>,
+                 timeout <span class="op">=</span> <span class="fl">60</span><span class="op">)</span>
+<span class="co">#&gt; [1] "Scraping Parley including hashtag '#nocovidvaccine'. This might take a while."</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">hashtag_posts_df1</span><span class="op">)</span>
+<span class="co">#&gt;  [1] "id1"                      "at"                      </span>
+<span class="co">#&gt;  [3] "article"                  "body"                    </span>
+<span class="co">#&gt;  [5] "comments"                 "createdAt"               </span>
+<span class="co">#&gt;  [7] "creator_id"               "creator_bio"             </span>
+<span class="co">#&gt;  [9] "creator_blocked"          "creator_coverPhoto"      </span>
+<span class="co">#&gt; [11] "creator_human"            "creator_integration"     </span>
+<span class="co">#&gt; [13] "creator_joined"           "creator_name"            </span>
+<span class="co">#&gt; [15] "creator_rss"              "creator_private"         </span>
+<span class="co">#&gt; [17] "creator_profilePhoto"     "creator_username"        </span>
+<span class="co">#&gt; [19] "creator_verified"         "creator_verifiedComments"</span>
+<span class="co">#&gt; [21] "creator_"                 "creator_score"           </span>
+<span class="co">#&gt; [23] "creator_interactions"     "creator_media"           </span>
+<span class="co">#&gt; [25] "creator_badges"           "depth"                   </span>
+<span class="co">#&gt; [27] "depthRaw"                 "hashtags"                </span>
+<span class="co">#&gt; [29] "id"                       "impressions"             </span>
+<span class="co">#&gt; [31] "links"                    "preview"                 </span>
+<span class="co">#&gt; [33] "reposts"                  "shareLink"               </span>
+<span class="co">#&gt; [35] "sensitive"                "state"                   </span>
+<span class="co">#&gt; [37] "upvotes"                  "creator_state"           </span>
+<span class="co">#&gt; [39] "parent"                   "root"</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">hashtag_posts_df1</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fl">50</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">creator_username</span>,<span class="va">createdAt</span>,<span class="va">impressions</span>,<span class="va">upvotes</span>,<span class="va">body</span><span class="op">)</span>
+<span class="co">#&gt; # A tibble: 50 x 5</span>
+<span class="co">#&gt;    creator_username  createdAt    impressions upvotes body                      </span>
+<span class="co">#&gt;    &lt;chr&gt;             &lt;chr&gt;              &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;                     </span>
+<span class="co">#&gt;  1 Bbobby            2021-01-10T~         588       6 "Just cause I'd like to s~</span>
+<span class="co">#&gt;  2 danthevann        2021-01-10T~          23       0 "This free speech stuff i~</span>
+<span class="co">#&gt;  3 Bbobby            2021-01-10T~         580       4 "Vigano \n#StopTheSteal #~</span>
+<span class="co">#&gt;  4 GnarshipEnterpri~ 2021-01-10T~         312       5 "Did you hear about a new~</span>
+<span class="co">#&gt;  5 shadowdances      2021-01-10T~         192       0 "#vaccines #vaccineinjury~</span>
+<span class="co">#&gt;  6 Scritchbeat       2021-01-10T~        2000      10 "#VoterFraud #StopTheStea~</span>
+<span class="co">#&gt;  7 Scritchbeat       2021-01-10T~        2100      12 "#VoterFraud #StopTheStea~</span>
+<span class="co">#&gt;  8 Scritchbeat       2021-01-10T~        2100      13 "#VoterFraud #StopTheStea~</span>
+<span class="co">#&gt;  9 Bushpilot182      2021-01-10T~         456       1 "Covid Vaccine Death\n\n#~</span>
+<span class="co">#&gt; 10 Scritchbeat       2021-01-10T~        2500      12 "#VoterFraud #StopTheStea~</span>
+<span class="co">#&gt; # ... with 40 more rows</span></code></pre></div>
 </div>
 <div id="get-user-profile-data" class="section level2">
 <h2 class="hasAnchor">
@@ -140,7 +239,7 @@
 <h3 class="hasAnchor">
 <a href="#raw-json-string" class="anchor"></a>Raw JSON String</h3>
 <p>NOT WORKING YET, FIX TOMORROW!</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">json_str</span> <span class="op">&lt;-</span> 
   <span class="fu"><a href="reference/parler_profile.html">parler_profile</a></span><span class="op">(</span>user <span class="op">=</span> <span class="st">"TuckerCarlson"</span>,
                  output_format <span class="op">=</span> <span class="st">"json"</span>,
@@ -150,7 +249,7 @@
 <div id="r-dataframe-nested-variables-flattened" class="section level3">
 <h3 class="hasAnchor">
 <a href="#r-dataframe-nested-variables-flattened" class="anchor"></a>R data.frame (nested variables flattened)</h3>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">out</span> <span class="op">&lt;-</span>
   <span class="fu"><a href="reference/parler_profile.html">parler_profile</a></span><span class="op">(</span>user <span class="op">=</span> <span class="st">"caseybmulligan"</span>,
                  output_format <span class="op">=</span> <span class="st">"data.frame"</span>,
@@ -159,10 +258,8 @@
                  parse_numbers <span class="op">=</span> <span class="cn">TRUE</span>,
                  verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="co">#&gt; [1] "Scraping profile information for caseybmulligan"</span>
-<span class="co">#&gt; Warning in if (x == "0") {: the condition has length &gt; 1 and only the first</span>
-<span class="co">#&gt; element will be used</span>
 <span class="co">#&gt; Warning: Flattened variable 'badges' of length 2 with separator ' || '</span></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span>
 <span class="co">#&gt;  [1] "accountColor"     "bio"              "blocked"          "coverPhoto"      </span>
 <span class="co">#&gt;  [5] "human"            "id"               "integration"      "joined"          </span>
@@ -171,18 +268,18 @@
 <span class="co">#&gt; [17] "score"            "interactions"     "state"            "banned"          </span>
 <span class="co">#&gt; [21] "comments"         "followers"        "following"        "likes"           </span>
 <span class="co">#&gt; [25] "posts"            "media"</span></code></pre></div>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">out</span> <span class="op">%&gt;%</span> 
   <span class="fu">select</span><span class="op">(</span><span class="va">name</span>,<span class="va">username</span>,<span class="va">followers</span>,<span class="va">following</span>,<span class="va">likes</span>,<span class="va">posts</span>,<span class="va">joined</span>,<span class="va">bio</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 1 x 8</span>
 <span class="co">#&gt;   name     username  followers following likes posts joined   bio               </span>
 <span class="co">#&gt;   &lt;chr&gt;    &lt;chr&gt;         &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;             </span>
-<span class="co">#&gt; 1 Casey B~ caseybmu~    122000        64   123 252   2020-10~ "You're Hired! Un~</span></code></pre></div>
+<span class="co">#&gt; 1 Casey B~ caseybmu~    121000        63   125 261   2020-10~ "You're Hired! Un~</span></code></pre></div>
 </div>
 <div id="without-token-associated-variables" class="section level3">
 <h3 class="hasAnchor">
 <a href="#without-token-associated-variables" class="anchor"></a>Without Token-associated variables</h3>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">out2</span> <span class="op">&lt;-</span>
   <span class="fu"><a href="reference/parler_profile.html">parler_profile</a></span><span class="op">(</span>user <span class="op">=</span> <span class="st">"caseybmulligan"</span>,
                  output_format <span class="op">=</span> <span class="st">"data.frame"</span>,
@@ -191,10 +288,8 @@
                  parse_numbers <span class="op">=</span> <span class="cn">TRUE</span>,
                  verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="co">#&gt; [1] "Scraping profile information for caseybmulligan"</span>
-<span class="co">#&gt; Warning in if (x == "0") {: the condition has length &gt; 1 and only the first</span>
-<span class="co">#&gt; element will be used</span>
 <span class="co">#&gt; Warning: Flattened variable 'badges' of length 2 with separator ' || '</span></code></pre></div>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">out2</span><span class="op">)</span>
 <span class="co">#&gt;  [1] "accountColor"     "bio"              "blocked"          "coverPhoto"      </span>
 <span class="co">#&gt;  [5] "followed"         "human"            "id"               "integration"     </span>
@@ -205,20 +300,20 @@
 <span class="co">#&gt; [25] "comments"         "followers"        "following"        "likes"           </span>
 <span class="co">#&gt; [29] "posts"            "media"</span></code></pre></div>
 <p>New colnames which are only outputtet if <code>token_variables == TRUE</code>:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">out2</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="va">.</span><span class="op">[</span><span class="op">!</span><span class="va">.</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span><span class="op">]</span>
 <span class="co">#&gt; [1] "followed"       "muted"          "pendingFollow"  "isFollowingYou"</span></code></pre></div>
 </div>
 <div id="json-list-object" class="section level3">
 <h3 class="hasAnchor">
 <a href="#json-list-object" class="anchor"></a>JSON List Object</h3>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">jlist</span> <span class="op">&lt;-</span> 
   <span class="fu"><a href="reference/parler_profile.html">parler_profile</a></span><span class="op">(</span>user <span class="op">=</span> <span class="st">"caseybmulligan"</span>,
                  output_format <span class="op">=</span> <span class="st">"list"</span>,
                  flatten_sep <span class="op">=</span> <span class="st">" || "</span>,
                  verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">jlist</span><span class="op">)</span>
 <span class="co">#&gt; List of 31</span>
 <span class="co">#&gt;  $ _id             : chr "ccab997e08254afe9231c35857f95d81"</span>
@@ -243,22 +338,22 @@
 <span class="co">#&gt;  $ badges          :List of 2</span>
 <span class="co">#&gt;   ..$ : int 1</span>
 <span class="co">#&gt;   ..$ : int 0</span>
-<span class="co">#&gt;  $ score           : chr "43k"</span>
+<span class="co">#&gt;  $ score           : chr "44k"</span>
 <span class="co">#&gt;  $ interactions    : int 259</span>
 <span class="co">#&gt;  $ state           : int 1</span>
 <span class="co">#&gt;  $ banned          : logi FALSE</span>
 <span class="co">#&gt;  $ isFollowingYou  : logi FALSE</span>
 <span class="co">#&gt;  $ comments        : chr "50"</span>
-<span class="co">#&gt;  $ followers       : chr "122k"</span>
-<span class="co">#&gt;  $ following       : chr "64"</span>
-<span class="co">#&gt;  $ likes           : chr "123"</span>
-<span class="co">#&gt;  $ posts           : chr "252"</span>
+<span class="co">#&gt;  $ followers       : chr "121k"</span>
+<span class="co">#&gt;  $ following       : chr "63"</span>
+<span class="co">#&gt;  $ likes           : chr "125"</span>
+<span class="co">#&gt;  $ posts           : chr "261"</span>
 <span class="co">#&gt;  $ media           : chr "27"</span></code></pre></div>
 </div>
 <div id="multiple-users" class="section level3">
 <h3 class="hasAnchor">
 <a href="#multiple-users" class="anchor"></a>Multiple Users</h3>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">user_vec</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Marklevinshow"</span>,<span class="st">"SeanHannity"</span>,<span class="st">"Devinnunes"</span>,<span class="st">"GovernorNoem"</span>,
               <span class="st">"KTHopkins"</span>,<span class="st">"Westmonster"</span>,<span class="st">"TommyRobinson"</span><span class="op">)</span>
 
@@ -273,41 +368,39 @@
                             verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
            <span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">bind_rows</span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; Warning in if (x == "0") {: the condition has length &gt; 1 and only the first</span>
-<span class="co">#&gt; element will be used</span>
-
-<span class="co">#&gt; Warning in if (x == "0") {: the condition has length &gt; 1 and only the first</span>
-<span class="co">#&gt; element will be used</span>
 <span class="co">#&gt; Warning: Outer names are only allowed for unnamed scalar atomic inputs</span>
 <span class="co">#&gt; New names:</span>
 <span class="co">#&gt; * `` -&gt; ...19</span>
 <span class="co">#&gt; Warning: Outer names are only allowed for unnamed scalar atomic inputs</span>
 <span class="co">#&gt; New names:</span>
 <span class="co">#&gt; * `` -&gt; ...20</span>
-<span class="co">#&gt; Warning in if (x == "0") {: the condition has length &gt; 1 and only the first</span>
-<span class="co">#&gt; element will be used</span>
-
-<span class="co">#&gt; Warning in if (x == "0") {: Outer names are only allowed for unnamed scalar</span>
-<span class="co">#&gt; atomic inputs</span>
+<span class="co">#&gt; Warning: Outer names are only allowed for unnamed scalar atomic inputs</span>
 <span class="co">#&gt; New names:</span>
 <span class="co">#&gt; * `` -&gt; ...21</span>
 <span class="co">#&gt; Warning: Outer names are only allowed for unnamed scalar atomic inputs</span>
 <span class="co">#&gt; New names:</span>
-<span class="co">#&gt; * `` -&gt; ...20</span></code></pre></div>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<span class="co">#&gt; * `` -&gt; ...20</span>
+<span class="co">#&gt; New names:</span>
+<span class="co">#&gt; * ...19 -&gt; ...15</span>
+<span class="co">#&gt; New names:</span>
+<span class="co">#&gt; * ...20 -&gt; ...16</span>
+<span class="co">#&gt; New names:</span>
+<span class="co">#&gt; * ...21 -&gt; ...16</span>
+<span class="co">#&gt; New names:</span>
+<span class="co">#&gt; * ...20 -&gt; ...16</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">out_df</span> <span class="op">%&gt;%</span> 
     <span class="fu">select</span><span class="op">(</span><span class="va">name</span>,<span class="va">username</span>,<span class="va">followers</span>,<span class="va">following</span>,<span class="va">likes</span>,<span class="va">posts</span>,<span class="va">joined</span>,<span class="va">bio</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 7 x 8</span>
 <span class="co">#&gt;   name     username  followers following likes posts joined   bio               </span>
 <span class="co">#&gt;   &lt;chr&gt;    &lt;chr&gt;         &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;             </span>
-<span class="co">#&gt; 1 Mark Le~ Marklevi~   4800000         4     0 3.5k  2019-06~ "THIS IS THE OFFI~</span>
-<span class="co">#&gt; 2 Sean Ha~ SeanHann~   7400000         7     0 2.5k  2020-06~ "TV Host Fox News~</span>
-<span class="co">#&gt; 3 Devin N~ Devinnun~   5300000       318   525 1.7k  2020-02~  &lt;NA&gt;             </span>
-<span class="co">#&gt; 4 Gov. Kr~ Governor~    717000        36     0 40    2020-11~ "South Dakotan. W~</span>
-<span class="co">#&gt; 5 Katie H~ KTHopkins    467000         0     8 1.3k  2020-06~ "the Biggest Bitc~</span>
+<span class="co">#&gt; 1 Mark Le~ Marklevi~   4900000         4     0 3.5k  2019-06~ "THIS IS THE OFFI~</span>
+<span class="co">#&gt; 2 Sean Ha~ SeanHann~   7600000         7     0 2.5k  2020-06~ "TV Host Fox News~</span>
+<span class="co">#&gt; 3 Devin N~ Devinnun~   2900000       160   528 1.7k  2020-02~  &lt;NA&gt;             </span>
+<span class="co">#&gt; 4 Gov. Kr~ Governor~    790000        36     0 40    2020-11~ "South Dakotan. W~</span>
+<span class="co">#&gt; 5 Katie H~ KTHopkins    473000         1     8 1.3k  2020-06~ "the Biggest Bitc~</span>
 <span class="co">#&gt; 6 Westmon~ Westmons~    149000         2     0 1.4k  2020-06~ "WESTMONSTER.COM ~</span>
-<span class="co">#&gt; 7 Tommy R~ TommyRob~    346000       243    94 6.8k  2019-06~ "I’m back \n\nhtt~</span></code></pre></div>
-</div>
+<span class="co">#&gt; 7 Tommy R~ TommyRob~    361000       248    94 6.8k  2019-06~ "I’m back \n\nhtt~</span></code></pre></div>
 </div>
 </div>
 

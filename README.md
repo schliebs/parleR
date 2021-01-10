@@ -1,15 +1,5 @@
 
-  - [parleR](#parler)
-      - [Pre-Installation Steps and System
-        Requirements](#pre-installation-steps-and-system-requirements)
-      - [Installation and Loading](#installation-and-loading)
-      - [API Authentication](#api-authentication)
-      - [Get Posts by Username](#get-posts-by-username)
-      - [Get User Profile Data](#get-user-profile-data)
-
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
-# parleR
 
 <!-- badges: start -->
 
@@ -63,6 +53,118 @@ entering the token.
 
 ## Get Posts by Username
 
+``` r
+post_df1 <- 
+  parler_posts(user = "Grenell",
+               output_format = "data.frame",
+               flatten_sep = " || ",
+               parse_numbers = TRUE,
+               verbose = TRUE)
+#> [1] "Scraping profile information for 'Grenell'. This might take a while."
+```
+
+``` r
+colnames(post_df1)
+#>  [1] "id1"                      "at"                      
+#>  [3] "article"                  "body"                    
+#>  [5] "comments"                 "createdAt"               
+#>  [7] "creator_id"               "creator_bio"             
+#>  [9] "creator_blocked"          "creator_human"           
+#> [11] "creator_integration"      "creator_joined"          
+#> [13] "creator_name"             "creator_rss"             
+#> [15] "creator_private"          "creator_profilePhoto"    
+#> [17] "creator_username"         "creator_verified"        
+#> [19] "creator_verifiedComments" "creator_"                
+#> [21] "creator_score"            "creator_interactions"    
+#> [23] "creator_media"            "creator_badges"          
+#> [25] "depth"                    "depthRaw"                
+#> [27] "hashtags"                 "id"                      
+#> [29] "impressions"              "links"                   
+#> [31] "preview"                  "reposts"                 
+#> [33] "shareLink"                "sensitive"               
+#> [35] "state"                    "upvotes"                 
+#> [37] "parent"                   "root"
+```
+
+``` r
+post_df1 %>% 
+  dplyr::select(creator_username,createdAt,impressions,upvotes,body)
+#> # A tibble: 83 x 5
+#>    creator_username createdAt     impressions upvotes body                      
+#>    <chr>            <chr>               <dbl>   <dbl> <chr>                     
+#>  1 Grenell          2021-01-09T0~      241000    6500 "Start following people -~
+#>  2 Grenell          2021-01-09T0~      127000    1700 "Start following people -~
+#>  3 Grenell          2021-01-07T0~      298000    2300 "I’ll be on with @SeanHan~
+#>  4 Grenell          2021-01-03T1~      333000    2500 ""                        
+#>  5 Grenell          2021-01-03T1~      922000    9200 ""                        
+#>  6 Grenell          2021-01-03T1~      905000    9200 ""                        
+#>  7 Grenell          2021-01-01T2~      333000    2500 "New year means opening u~
+#>  8 Grenell          2020-12-31T1~      147000    1500 ""                        
+#>  9 Grenell          2020-12-26T1~      410000    3900 ""                        
+#> 10 Grenell          2020-12-25T1~      410000    3900 "Today I’m thinking of th~
+#> # ... with 73 more rows
+```
+
+## Get all Posts with a certain Hashtag
+
+Because there are thousands of posts, we time out the request after a
+certain amount of seconds.
+
+``` r
+hashtag_posts_df1 <- 
+  parler_hashtag(hashtag = "nocovidvaccine",
+                 output_format = "data.frame",
+                 flatten_sep = " || ",
+                 parse_numbers = TRUE,
+                 verbose = TRUE,
+                 timeout = 60)
+#> [1] "Scraping Parley including hashtag '#nocovidvaccine'. This might take a while."
+```
+
+``` r
+colnames(hashtag_posts_df1)
+#>  [1] "id1"                      "at"                      
+#>  [3] "article"                  "body"                    
+#>  [5] "comments"                 "createdAt"               
+#>  [7] "creator_id"               "creator_bio"             
+#>  [9] "creator_blocked"          "creator_coverPhoto"      
+#> [11] "creator_human"            "creator_integration"     
+#> [13] "creator_joined"           "creator_name"            
+#> [15] "creator_rss"              "creator_private"         
+#> [17] "creator_profilePhoto"     "creator_username"        
+#> [19] "creator_verified"         "creator_verifiedComments"
+#> [21] "creator_"                 "creator_score"           
+#> [23] "creator_interactions"     "creator_media"           
+#> [25] "creator_badges"           "depth"                   
+#> [27] "depthRaw"                 "hashtags"                
+#> [29] "id"                       "impressions"             
+#> [31] "links"                    "preview"                 
+#> [33] "reposts"                  "shareLink"               
+#> [35] "sensitive"                "state"                   
+#> [37] "upvotes"                  "creator_state"           
+#> [39] "parent"                   "root"
+```
+
+``` r
+hashtag_posts_df1 %>% 
+  head(50) %>% 
+  dplyr::select(creator_username,createdAt,impressions,upvotes,body)
+#> # A tibble: 50 x 5
+#>    creator_username  createdAt    impressions upvotes body                      
+#>    <chr>             <chr>              <dbl>   <dbl> <chr>                     
+#>  1 Bbobby            2021-01-10T~         588       6 "Just cause I'd like to s~
+#>  2 danthevann        2021-01-10T~          23       0 "This free speech stuff i~
+#>  3 Bbobby            2021-01-10T~         580       4 "Vigano \n#StopTheSteal #~
+#>  4 GnarshipEnterpri~ 2021-01-10T~         312       5 "Did you hear about a new~
+#>  5 shadowdances      2021-01-10T~         192       0 "#vaccines #vaccineinjury~
+#>  6 Scritchbeat       2021-01-10T~        2000      10 "#VoterFraud #StopTheStea~
+#>  7 Scritchbeat       2021-01-10T~        2100      12 "#VoterFraud #StopTheStea~
+#>  8 Scritchbeat       2021-01-10T~        2100      13 "#VoterFraud #StopTheStea~
+#>  9 Bushpilot182      2021-01-10T~         456       1 "Covid Vaccine Death\n\n#~
+#> 10 Scritchbeat       2021-01-10T~        2500      12 "#VoterFraud #StopTheStea~
+#> # ... with 40 more rows
+```
+
 ## Get User Profile Data
 
 ### Raw JSON String
@@ -88,8 +190,6 @@ out <-
                  parse_numbers = TRUE,
                  verbose = TRUE)
 #> [1] "Scraping profile information for caseybmulligan"
-#> Warning in if (x == "0") {: the condition has length > 1 and only the first
-#> element will be used
 #> Warning: Flattened variable 'badges' of length 2 with separator ' || '
 ```
 
@@ -110,7 +210,7 @@ out %>%
 #> # A tibble: 1 x 8
 #>   name     username  followers following likes posts joined   bio               
 #>   <chr>    <chr>         <dbl>     <dbl> <dbl> <chr> <chr>    <chr>             
-#> 1 Casey B~ caseybmu~    122000        64   123 252   2020-10~ "You're Hired! Un~
+#> 1 Casey B~ caseybmu~    121000        63   125 261   2020-10~ "You're Hired! Un~
 ```
 
 ### Without Token-associated variables
@@ -124,8 +224,6 @@ out2 <-
                  parse_numbers = TRUE,
                  verbose = TRUE)
 #> [1] "Scraping profile information for caseybmulligan"
-#> Warning in if (x == "0") {: the condition has length > 1 and only the first
-#> element will be used
 #> Warning: Flattened variable 'badges' of length 2 with separator ' || '
 ```
 
@@ -183,16 +281,16 @@ str(jlist)
 #>  $ badges          :List of 2
 #>   ..$ : int 1
 #>   ..$ : int 0
-#>  $ score           : chr "43k"
+#>  $ score           : chr "44k"
 #>  $ interactions    : int 259
 #>  $ state           : int 1
 #>  $ banned          : logi FALSE
 #>  $ isFollowingYou  : logi FALSE
 #>  $ comments        : chr "50"
-#>  $ followers       : chr "122k"
-#>  $ following       : chr "64"
-#>  $ likes           : chr "123"
-#>  $ posts           : chr "252"
+#>  $ followers       : chr "121k"
+#>  $ following       : chr "63"
+#>  $ likes           : chr "125"
+#>  $ posts           : chr "261"
 #>  $ media           : chr "27"
 ```
 
@@ -213,27 +311,26 @@ out_df <-
                             verbose = FALSE)
            ) %>% 
   bind_rows()
-#> Warning in if (x == "0") {: the condition has length > 1 and only the first
-#> element will be used
-
-#> Warning in if (x == "0") {: the condition has length > 1 and only the first
-#> element will be used
 #> Warning: Outer names are only allowed for unnamed scalar atomic inputs
 #> New names:
 #> * `` -> ...19
 #> Warning: Outer names are only allowed for unnamed scalar atomic inputs
 #> New names:
 #> * `` -> ...20
-#> Warning in if (x == "0") {: the condition has length > 1 and only the first
-#> element will be used
-
-#> Warning in if (x == "0") {: Outer names are only allowed for unnamed scalar
-#> atomic inputs
+#> Warning: Outer names are only allowed for unnamed scalar atomic inputs
 #> New names:
 #> * `` -> ...21
 #> Warning: Outer names are only allowed for unnamed scalar atomic inputs
 #> New names:
 #> * `` -> ...20
+#> New names:
+#> * ...19 -> ...15
+#> New names:
+#> * ...20 -> ...16
+#> New names:
+#> * ...21 -> ...16
+#> New names:
+#> * ...20 -> ...16
 ```
 
 ``` r
@@ -242,11 +339,11 @@ out_df %>%
 #> # A tibble: 7 x 8
 #>   name     username  followers following likes posts joined   bio               
 #>   <chr>    <chr>         <dbl>     <dbl> <dbl> <chr> <chr>    <chr>             
-#> 1 Mark Le~ Marklevi~   4800000         4     0 3.5k  2019-06~ "THIS IS THE OFFI~
-#> 2 Sean Ha~ SeanHann~   7400000         7     0 2.5k  2020-06~ "TV Host Fox News~
-#> 3 Devin N~ Devinnun~   5300000       318   525 1.7k  2020-02~  <NA>             
-#> 4 Gov. Kr~ Governor~    717000        36     0 40    2020-11~ "South Dakotan. W~
-#> 5 Katie H~ KTHopkins    467000         0     8 1.3k  2020-06~ "the Biggest Bitc~
+#> 1 Mark Le~ Marklevi~   4900000         4     0 3.5k  2019-06~ "THIS IS THE OFFI~
+#> 2 Sean Ha~ SeanHann~   7600000         7     0 2.5k  2020-06~ "TV Host Fox News~
+#> 3 Devin N~ Devinnun~   2900000       160   528 1.7k  2020-02~  <NA>             
+#> 4 Gov. Kr~ Governor~    790000        36     0 40    2020-11~ "South Dakotan. W~
+#> 5 Katie H~ KTHopkins    473000         1     8 1.3k  2020-06~ "the Biggest Bitc~
 #> 6 Westmon~ Westmons~    149000         2     0 1.4k  2020-06~ "WESTMONSTER.COM ~
-#> 7 Tommy R~ TommyRob~    346000       243    94 6.8k  2019-06~ "I’m back \n\nhtt~
+#> 7 Tommy R~ TommyRob~    361000       248    94 6.8k  2019-06~ "I’m back \n\nhtt~
 ```

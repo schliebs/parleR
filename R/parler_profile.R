@@ -16,9 +16,7 @@ parse_profile <- function(jsonlist,
                  return(NA)
                }
 
-               if(x == "0"){
-                 return(0)
-               }
+
 
                if(length(x) == 1){
                  return(x)
@@ -31,7 +29,7 @@ parse_profile <- function(jsonlist,
                  }
                  return(conc)
                }
-             }) %>% purrr::set_names(nm = names(jl))
+             }) #%>% purrr::set_names(nm = names(jl))
 
 
   ### other pre-processing to be implemented HERE
@@ -41,11 +39,22 @@ parse_profile <- function(jsonlist,
   prof_df$joined <- prof_df$joined %>% parler_time(parltime = .,
                                                    out_format = "character")
 
+  num_vars2 <-
+    num_vars %>% .[. %in% colnames(prof_df)]
+
+  if(! "media" %in% colnames(prof_df)){
+    prof_df$media <- NA
+  }
+
+  if(! "badges" %in% colnames(prof_df)){
+    prof_df$badges <- NA
+  }
+
   prof_df <-
     prof_df %>%
-    dplyr::mutate(dplyr::across(.cols = num_vars,
+    dplyr::mutate(dplyr::across(.cols = all_of(num_vars2),
                                 .fns = parler_number)) %>%
-    mutate(badges = badges %>% as.character(),
+    dplyr::mutate(badges = badges %>% as.character(),
            media = media %>% as.character())#check here
 
   ####
@@ -61,7 +70,7 @@ parse_profile <- function(jsonlist,
 
     final_df <-
       prof_df %>%
-      dplyr::select(all_of(vars))
+      dplyr::select(any_of(vars))
 
     return(final_df)
 
@@ -72,7 +81,7 @@ parse_profile <- function(jsonlist,
 
     final_df <-
       prof_df %>%
-      dplyr::select(all_of(vars))
+      dplyr::select(any_of(vars))
 
     return(final_df)
   }
