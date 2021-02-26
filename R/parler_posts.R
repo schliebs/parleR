@@ -131,16 +131,21 @@ parler_posts <- function(user,
            intern = TRUE)
 
 
-  # AB HIER ENTFERNEN
-  file.copy(tmp_json,paste0("C://Users/ms/Desktop/parl/",
-                            tmp_json %>%
-                              stringr::str_extract("(?<=\\\\Temp\\\\).*?(?=.json)") %>%
-                              stringr::str_replace_all("\\\\","__"),
-                            ".json"))
 
-  # BIS HIER ENTFERNEN
+  jsonlist <- try(jsonlite::read_json(tmp_json, simplifyVector = FALSE),silent = T)
 
-  jsonlist <- jsonlite::read_json(tmp_json, simplifyVector = FALSE)
+  if (class(jsonlist) == "try-error") {
+    raw_file <- readr::read_file(tmp_json) %>%
+      paste0(.,"\n]")
+
+    jsonlist <-
+      jsonlite::parse_json(raw_file,simplifyVector = FALSE)
+
+
+
+  }else{
+    raw_file <- readr::read_file(tmp_json)
+  }
 
   if(output_format == "data.frame"){
 

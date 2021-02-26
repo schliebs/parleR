@@ -57,16 +57,6 @@ parler_hashtag <- function(hashtag,
   }
 
 
-
-  # AB HIER ENTFERNEN
-  file.copy(tmp_json,paste0("C://Users/ms/Desktop/parl/",
-                            tmp_json %>%
-                              stringr::str_extract("(?<=\\\\Temp\\\\).*?(?=.json)") %>%
-                              stringr::str_replace_all("\\\\","__"),
-                            ".json"))
-
-  # BIS HIER ENTFERNEN
-
   # to
 
   if(output_format == "data.frame"){

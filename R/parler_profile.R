@@ -133,7 +133,20 @@ parler_profile <- function(user,
                   tmp_json),
            intern = TRUE)
 
-  jsonlist <- jsonlite::read_json(tmp_json, simplifyVector = FALSE)[[1]]
+  jsonlist <- try(jsonlite::read_json(tmp_json, simplifyVector = FALSE),silent = T)
+
+  if (class(jsonlist) == "try-error") {
+    raw_file <- readr::read_file(tmp_json) %>%
+      paste0(.,"\n]")
+
+    jsonlist <-
+      jsonlite::parse_json(raw_file,simplifyVector = FALSE)
+
+
+
+  }else{
+    raw_file <- readr::read_file(tmp_json)
+  }
 
   if(output_format == "data.frame"){
 

@@ -1,11 +1,9 @@
 ---
-title: "parleR: An R-Interface to Parler.com (backend-credits to castlelemongrab/parlance)"
-author: Marcel Schliebs and Dorian Quelle
-date: January 10, 2020
 output: github_document
 ---
+# parleR: An R-Interface to Parler.com via castlelemongrab/parlance/
 
-# parleR
+Authors: Marcel Schliebs and Dorian Quelle
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
