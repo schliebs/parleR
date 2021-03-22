@@ -102,6 +102,7 @@ parse_post <- function(pj,
 #' @param flatten_sep Separator used to flatten nested variables (e.g. multiple badges per user). Defaults to ` || `
 #' @param parse_numbers Whether to parse numbers from Parler's format to numeric (e.g. from `16k` to 16000)
 #' @param verbose Whether to print additional information while scraping
+#' @param timeout Timeout after how many seconds to stop scraping.
 #' @return A dataframe with one row for each post and a column for each variable.
 #' @details Warning: ...
 #' @examples
@@ -120,7 +121,8 @@ parler_posts <- function(user,
                          output_format = "data.frame",
                          flatten_sep = " || ",
                          parse_numbers = TRUE,
-                         verbose = FALSE){
+                         verbose = FALSE,
+                         timeout = 600){
 
   tmp_json <- paste0(tempfile(),".json")
 
@@ -128,7 +130,8 @@ parler_posts <- function(user,
   noprint <-
     system(paste0("parlance posts --username ", user," --silent TRUE >> ",
                   tmp_json),
-           intern = TRUE)
+           intern = TRUE,
+           timeout = 600)
 
 
 

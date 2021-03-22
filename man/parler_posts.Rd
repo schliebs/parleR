@@ -9,7 +9,8 @@ parler_posts(
   output_format = "data.frame",
   flatten_sep = " || ",
   parse_numbers = TRUE,
-  verbose = FALSE
+  verbose = FALSE,
+  timeout = 600
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ parler_posts(
 \item{parse_numbers}{Whether to parse numbers from Parler's format to numeric (e.g. from \verb{16k} to 16000)}
 
 \item{verbose}{Whether to print additional information while scraping}
+
+\item{timeout}{Timeout after how many seconds to stop scraping.}
 }
 \value{
 A dataframe with one row for each post and a column for each variable.
